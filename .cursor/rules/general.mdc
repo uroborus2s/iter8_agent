@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: 项目结构
+globs:
+alwaysApply: true
+---
+
+# 项目结构总览
+
+> 规则描述: 项目结构总览，指导快速定位 agent 与 core 代码目录
+
+该项目是一个 **AI Agent** 项目，主要代码位于以下两个顶级目录：
+
+1. **agent/** ‑ 代理层逻辑，负责与外部系统或用户进行交互。
+2. **iter8_core/** ‑ 核心能力与工具库，实现算法、数据结构以及共享的业务逻辑。
+
+```
+iter8_agent/
+  ├─ agent/  # 代理层逻辑
+  └─ iter8_core/   # 核心工具与公共逻辑
+```
+
+> 在阅读代码时，优先从 `agent/` 目录中的入口文件查找执行流程，再深入到 `iter8_core/` 中查看具体实现细节。

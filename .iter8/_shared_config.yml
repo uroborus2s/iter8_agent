@@ -1,0 +1,10 @@
+# iter8 共享 Agent 配置
+# 此文件包含由所有 Agent 加载的通用设置，以确保行为一致性。
+
+settings:
+  root_directory: ".iter8" # 核心资源目录
+  resource_resolution: "优先查找 {root}/{type}/{name}.prompt.md，未找到则查找 {root}/{type}/{name}.md"
+
+fuzzy_matching: # 模糊匹配规则
+  confidence_threshold: 0.85 # 匹配的置信度阈值
+  action_on_uncertainty: "如果匹配度低于阈值，则必须向用户显示一个带编号的选项列表。" 
