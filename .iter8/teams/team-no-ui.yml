@@ -1,0 +1,9 @@
+bundle:
+  name: Team No UI
+  icon: 🔧
+  description: Team with no UX or UI Planning.
+agents:
+  - po
+workflows:
+  - greenfield-service
+  - brownfield-service

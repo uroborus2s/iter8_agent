@@ -1,0 +1,127 @@
+bundle:
+  name: 实现层团队 (Implementation Layer)
+  icon: ⚡
+  description: 负责代码实现、测试和质量保证的核心开发团队，由全栈开发工程师和质量保证工程师组成。
+
+# === 团队成员 ===
+team_members:
+  - agent: dev
+    name: 哪吒
+    mythological_role: 多能力实现之神
+    responsibility: 全栈开发工程师，代码实现专家
+    skills: [代码实现, 测试编写, 调试优化, 技术集成]
+    
+  - agent: qa
+    name: 杨戬 (二郎神)
+    mythological_role: 慧眼识珠质量守护者
+    responsibility: 质量保证工程师，缺陷发现专家
+    skills: [质量检测, 测试设计, 缺陷追踪, 验收验证]
+
+# === 协作模式 ===
+collaboration_patterns:
+  internal_collaboration:
+    participants: [哪吒, 杨戬]
+    pattern: 开发测试并行 + 质量门控
+    artifacts: [代码实现, 测试用例, 缺陷报告, 质量报告]
+    frequency: 每个功能开发周期
+    
+  upstream_handoff:
+    from_technical_design:
+      source_team: technical-design-layer
+      received_artifacts: [系统架构, 技术文档, 接口定义, 验收标准]
+      collaboration_mode: 技术交底 + 实现指导
+      
+  feedback_to_business:
+    to_business_value:
+      target_team: business-value-layer
+      feedback_artifacts: [用户反馈, 实现困难, 性能问题]
+      purpose: 实现反馈和需求澄清
+      frequency: 每个故事完成后
+
+# === 决策权限 ===
+decision_authority:
+  implementation_decisions:
+    primary_decision_maker: 哪吒 (Dev)
+    consultation_required: [杨戬 (QA)]
+    scope: [实现方案, 代码架构, 技术细节, 重构决策]
+    escalation_path: 鲁班 (Architect)
+    
+  quality_decisions:
+    primary_decision_maker: 杨戬 (QA)
+    consultation_required: [哪吒 (Dev)]
+    scope: [质量标准, 测试策略, 发布标准, 缺陷优先级]
+    escalation_path: 太乙真人 (SM)
+
+# === 沟通协议 ===
+communication_protocols:
+  internal_sync:
+    participants: [哪吒, 杨戬]
+    frequency: 每日
+    duration: 15分钟
+    format: 开发进展 + 测试状态 + 质量问题
+    
+  implementation_review:
+    participants: [哪吒, 杨戬, 太乙真人]
+    frequency: 每个故事完成后
+    purpose: 代码质量和交付验证
+    deliverables: [质量报告, 交付验证清单]
+    
+  technical_consultation:
+    participants: [哪吒, 鲁班, 文殊菩萨]
+    frequency: 按需召开
+    purpose: 技术难点解决和架构澄清
+    deliverables: [技术方案文档, 问题解决记录]
+
+# === 技能互补性 ===
+skill_complementarity:
+  implementation_skill: ["哪吒(专家)", "杨戬(熟练)"]
+  quality_mindset: ["杨戬(专家)", "哪吒(熟练)"]
+  technical_depth: ["哪吒(专家)", "杨戬(熟练)"]
+  testing_expertise: ["杨戬(专家)", "哪吒(熟练)"]
+  problem_solving: ["哪吒(专家)", "杨戬(专家)"]
+
+# === 质量标准 ===
+quality_gates:
+  code_quality:
+    - 代码覆盖率 ≥ 80%
+    - 静态代码分析通过
+    - 代码审查完成
+    - 性能测试通过
+    
+  testing_quality:
+    - 单元测试通过率 100%
+    - 集成测试通过
+    - 用户验收测试通过
+    - 回归测试通过
+    
+  delivery_quality:
+    - 功能完整性验证
+    - 用户体验验证
+    - 安全性检查
+    - 性能基准达标
+
+# === 工作流程 ===
+workflows:
+  - implementation-cycle      # 实现层工作流
+  - quality-assurance        # 质量保证工作流
+  - continuous-integration   # 持续集成工作流
+
+# === 成功指标 ===
+success_metrics:
+  development_efficiency:
+    - 代码交付速度
+    - 功能完成率
+    - 重构频率
+    - 技术债务控制
+    
+  quality_metrics:
+    - 缺陷密度
+    - 缺陷修复时间
+    - 用户满意度
+    - 系统稳定性
+    
+  collaboration_efficiency:
+    - 测试并行效率
+    - 问题解决速度
+    - 技术澄清效率
+    - 交付预测准确性 

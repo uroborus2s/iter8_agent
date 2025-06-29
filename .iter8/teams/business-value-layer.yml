@@ -1,0 +1,141 @@
+bundle:
+  name: 业务价值层团队 (Business Value Layer)
+  icon: 💎
+  description: 负责产品战略、用户体验和业务价值创造的核心团队，由产品负责人和用户体验专家组成。
+
+# === 团队成员 ===
+team_members:
+  - agent: po
+    name: 姜尚 (姜子牙)
+    mythological_role: 战略规划大师
+    responsibility: 产品负责人，业务价值守护者
+    skills: [产品战略, 史诗规划, 用户故事, 业务决策]
+    
+  - agent: ux-expert
+    name: 嫦娥
+    mythological_role: 美感与体验女神
+    responsibility: 用户体验专家，用户价值守护者
+    skills: [用户研究, 体验设计, 界面设计, 可用性验证]
+
+# === 协作模式 ===
+collaboration_patterns:
+  internal_collaboration:
+    participants: [姜尚, 嫦娥]
+    pattern: 实时协作 + 异步审查
+    artifacts: [项目简介, PRD, 史诗, 用户故事, UX规格]
+    frequency: 每日同步 + 史诗级评审
+    
+  external_handoffs:
+    to_technical_design:
+      target_team: technical-design-layer
+      handoff_artifacts: [PRD, UX规格, 业务约束, 用户需求]
+      collaboration_mode: 正式移交 + 澄清会议
+      
+    feedback_from_implementation:
+      source_team: implementation-layer
+      feedback_artifacts: [用户反馈, 实现困难, 性能问题]
+      purpose: 实现反馈和需求澄清
+      frequency: 每个故事完成后
+
+# === 决策权限 ===
+decision_authority:
+  business_decisions:
+    primary_decision_maker: 姜尚 (PO)
+    consultation_required: [嫦娥 (UX)]
+    scope: [产品功能, 优先级, 业务价值, MVP定义]
+    escalation_path: "无 (最终决策层)"
+    
+  user_experience_decisions:
+    primary_decision_maker: 嫦娥 (UX-Expert)
+    consultation_required: [姜尚 (PO)]
+    scope: [用户界面, 交互设计, 用户体验标准]
+    escalation_path: 姜尚 (PO)
+
+# === 沟通协议 ===
+communication_protocols:
+  internal_sync:
+    participants: [姜尚, 嫦娥]
+    frequency: 每日
+    duration: 15分钟
+    format: 产品优先级 + UX进展 + 用户反馈
+    
+  business_value_review:
+    participants: [姜尚, 嫦娥, 太乙真人]
+    frequency: 每个史诗完成后
+    purpose: 业务价值验证和用户反馈
+    deliverables: [价值验证报告, 用户反馈总结]
+    
+  stakeholder_presentation:
+    participants: [姜尚, 嫦娥]
+    frequency: 每个里程碑
+    purpose: 向利益相关者展示业务价值和用户体验成果
+
+# === 技能互补性 ===
+skill_complementarity:
+  strategic_thinking: ["姜尚(专家)", "嫦娥(熟练)"]
+  user_focus: ["嫦娥(专家)", "姜尚(熟练)"]
+  business_analysis: ["姜尚(专家)", "嫦娥(中等)"]
+  design_thinking: ["嫦娥(专家)", "姜尚(中等)"]
+  stakeholder_management: ["姜尚(专家)", "嫦娥(熟练)"]
+
+# === 成长发展 ===
+team_development:
+  mentorship:
+    - mentor: "姜尚(产品策略)"
+      mentee: "嫦娥(业务理解)"
+      focus: 产品战略思维和业务价值判断
+      
+  knowledge_sharing:
+    business_domain_sharing: "姜尚+嫦娥 → 技术团队"
+    user_insights_sharing: "嫦娥 → 全团队"
+    
+  cross_training:
+    po_ux_skills: "嫦娥教授姜尚基础设计思维"
+    ux_business_skills: "姜尚教授嫦娥产品策略思维"
+
+# === 工作流程 ===
+workflows:
+  - product-documentation      # 业务价值层主工作流
+  - user-research-insights     # 用户研究洞察工作流
+  - epic-story-breakdown      # 史诗故事分解工作流
+
+# === 成功指标 ===
+success_metrics:
+  business_value:
+    - 用户满意度
+    - 产品功能使用率
+    - 业务目标达成率
+    - 需求变更频率
+    
+  user_experience:
+    - 用户任务完成率
+    - 界面可用性得分
+    - 用户反馈质量
+    - 设计一致性得分
+    
+  collaboration_efficiency:
+    - 需求澄清次数
+    - 设计评审通过率
+    - 跨团队沟通效率
+    - 业务决策速度
+
+# === 工具和产出物 ===
+tools_and_artifacts:
+  planning_tools:
+    - 用户故事地图
+    - 产品路线图
+    - 竞品分析
+    - 用户画像
+    
+  design_tools:
+    - 原型设计工具
+    - 用户体验地图
+    - 界面设计规范
+    - 可用性测试报告
+    
+  documentation:
+    - 项目简介
+    - 产品需求文档 (PRD)
+    - 史诗和用户故事
+    - UX规格说明
+    - 用户研究洞察 

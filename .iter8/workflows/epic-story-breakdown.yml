@@ -1,0 +1,276 @@
+workflow:
+  id: epic-story-breakdown
+  name: 史诗故事分解工作流
+  description: >-
+    姜尚(PO)主导的史诗和用户故事分解工作流，与嫦娥(UX专家)协作，
+    将产品需求和用户洞察转化为可执行的史诗和用户故事，确保开发团队明确交付目标。
+  type: business-value
+  team: business-value-layer
+  project_types:
+    - feature-development
+    - product-backlog-management
+    - mvp-planning
+    - agile-development
+
+  sequence:
+    - step: requirements_review
+      agents: [po, ux-expert]
+      action: 需求和洞察回顾
+      requires:
+        - prd.md
+        - user-research-insights.md
+        - ux-specification.md
+      notes: "姜尚和嫦娥共同回顾产品需求文档和用户研究洞察，为分解做准备。"
+
+    - step: value_stream_mapping
+      agent: po
+      action: 价值流程梳理
+      creates: value-stream-map.md
+      collaborates_with: ux-expert
+      notes: "姜尚梳理端到端的用户价值流程，嫦娥提供用户体验视角。"
+
+    - step: epic_identification
+      agent: po
+      action: 识别和定义史诗
+      creates: epic-backlog.md
+      requires: value-stream-map.md
+      collaborates_with: ux-expert
+      notes: "基于价值流程识别核心业务能力域，定义为史诗级功能。"
+
+    - step: epic_prioritization
+      agents: [po, ux-expert]
+      action: 史诗优先级排序
+      creates: epic-priority-matrix.md
+      requires: epic-backlog.md
+      uses: po-master-checklist
+      notes: "姜尚主导业务价值评估，嫦娥提供用户体验影响评估，共同确定优先级。"
+
+    - step: mvp_definition
+      agent: po
+      action: MVP范围界定
+      creates: mvp-scope.md
+      requires: epic-priority-matrix.md
+      collaborates_with: ux-expert
+      notes: "姜尚定义最小可行产品范围，嫦娥验证用户体验完整性。"
+
+    - step: epic_documentation
+      agent: po
+      action: 史诗详细文档化
+      creates: epic-*.md
+      uses: epic-tmpl
+      requires: mvp-scope.md
+      for_each: selected_epic
+      notes: "为每个选定史诗创建详细文档，包括业务目标、验收标准、依赖关系。"
+
+    - step: story_mapping
+      agents: [po, ux-expert]
+      action: 用户故事地图
+      creates: story-map.md
+      requires: epic-*.md
+      notes: "姜尚和嫦娥协作创建用户故事地图，可视化用户旅程和功能分解。"
+
+    - step: story_creation
+      agent: po
+      action: 用户故事创建
+      creates: story-*.md
+      uses: story-tmpl
+      requires: story-map.md
+      for_each: story_in_epic
+      collaborates_with: ux-expert
+      notes: "姜尚为每个史诗创建详细用户故事，嫦娥提供用户体验验收标准。"
+
+    - step: story_refinement
+      agents: [po, ux-expert]
+      action: 故事细化和完善
+      updates: story-*.md
+      uses: story-dod-checklist
+      notes: "共同细化故事描述、验收标准、优先级和估算指导。"
+
+    - step: acceptance_criteria
+      agent: ux-expert
+      action: 用户体验验收标准
+      updates: story-*.md
+      requires: story-*.md
+      collaborates_with: po
+      notes: "嫦娥为每个故事补充详细的用户体验验收标准。"
+
+    - step: story_prioritization
+      agent: po
+      action: 故事优先级排序
+      creates: story-backlog.md
+      requires: story-*.md
+      notes: "姜尚基于业务价值、用户价值和技术依赖确定故事优先级。"
+
+    - step: release_planning
+      agents: [po, ux-expert]
+      action: 发布计划制定
+      creates: release-plan.md
+      requires: story-backlog.md
+      notes: "制定渐进式发布计划，确保每个发布都有完整的用户价值。"
+
+    - step: backlog_validation
+      agent: po
+      action: 产品待办列表验证
+      validates: all_backlog_items
+      uses: po-master-checklist
+      notes: "姜尚验证整个产品待办列表的完整性、一致性和可执行性。"
+
+    - step: ux_consistency_check
+      agent: ux-expert
+      action: 用户体验一致性检查
+      validates: ux_aspects_in_stories
+      notes: "嫦娥检查所有故事中用户体验的一致性和连贯性。"
+
+    - workflow_end:
+      action: handoff_to_technical_design
+      notes: |
+        史诗故事分解完成！现在移交给技术设计层：
+        
+        1. 确保分解文档已保存到项目中：
+           - docs/epics/ (史诗文档集合)
+           - docs/stories/ (用户故事集合)
+           - docs/mvp-scope.md (MVP范围定义)
+           - docs/release-plan.md (发布计划)
+        
+        2. 移交给技术设计层（鲁班+文殊菩萨）：
+           - 提供优先级排序的产品待办列表
+           - 明确史诗和故事的技术约束
+           - 提供用户体验设计指导
+        
+        3. 准备开发协作：
+           - 故事澄清机制建立
+           - 验收标准共识达成
+           - 迭代规划准备就绪
+
+  collaboration_patterns:
+    po_led_breakdown:
+      leader: po
+      supporter: ux-expert
+      frequency: 每个分解阶段都密切协作
+      communication: 实时协作和异步验证相结合
+      decision_making: 姜尚主导业务优先级决策，嫦娥主导用户体验决策
+      conflict_resolution: 优先用户价值，平衡业务目标和实现复杂度
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[开始: 史诗故事分解] --> B[姜尚+嫦娥: 需求回顾]
+        B --> C[姜尚+嫦娥: 价值流程梳理 → value-stream-map.md]
+        C --> D[姜尚+嫦娥: 史诗识别 → epic-backlog.md]
+        D --> E[姜尚+嫦娥: 史诗优先级 → epic-priority-matrix.md]
+        E --> F[姜尚+嫦娥: MVP定义 → mvp-scope.md]
+        F --> G[姜尚: 史诗文档化 → epic-*.md]
+        G --> H[姜尚+嫦娥: 故事地图 → story-map.md]
+        H --> I[姜尚+嫦娥: 故事创建 → story-*.md]
+        I --> J[姜尚+嫦娥: 故事细化]
+        J --> K[嫦娥: UX验收标准]
+        K --> L[姜尚: 故事优先级 → story-backlog.md]
+        L --> M[姜尚+嫦娥: 发布计划 → release-plan.md]
+        M --> N[姜尚: 待办列表验证]
+        N --> O[嫦娥: UX一致性检查]
+        O --> P{分解质量达标?}
+        P -->|是| Q[移交技术设计层]
+        P -->|否| R[完善分解内容]
+        R --> J
+
+        style Q fill:#90EE90
+        style C fill:#FFE4B5
+        style E fill:#FFE4B5
+        style F fill:#FFE4B5
+        style H fill:#FFE4B5
+        style I fill:#FFE4B5
+        style M fill:#FFE4B5
+        style N fill:#E6E6FA
+        style O fill:#E6E6FA
+    ```
+
+  breakdown_principles:
+    epic_characteristics:
+      - 代表完整的业务能力
+      - 可以独立交付价值
+      - 跨越多个开发迭代
+      - 有明确的业务成果
+      
+    story_characteristics:
+      - 在一个迭代内完成
+      - 有明确的验收标准
+      - 体现用户价值
+      - 可以独立测试验证
+      
+    mvp_principles:
+      - 最小可行产品
+      - 完整用户体验
+      - 核心价值验证
+      - 快速市场反馈
+
+  sizing_guidance:
+    epic_size:
+      - 开发周期: 4-12周
+      - 故事数量: 8-20个故事
+      - 团队规模: 1-2个敏捷团队
+      - 复杂度: 中到高复杂度
+      
+    story_size:
+      - 开发周期: 1-5天
+      - 复杂度: 低到中复杂度
+      - 估算: 1-8故事点
+      - 验收: 明确可测试
+
+  quality_gates:
+    epic_quality:
+      - 业务价值清晰
+      - 用户价值明确
+      - 技术可行性确认
+      - 依赖关系识别
+      
+    story_quality:
+      - INVEST原则符合
+      - 验收标准完整
+      - 用户价值体现
+      - 估算指导明确
+      
+    backlog_health:
+      - 优先级排序合理
+      - 范围界定清晰
+      - 发布计划可行
+      - 团队理解一致
+
+  templates_used:
+    - epic-tmpl (史诗模板)
+    - story-tmpl (用户故事模板)
+    - po-master-checklist (PO主检查清单)
+    - story-dod-checklist (故事完成定义检查清单)
+
+  success_metrics:
+    breakdown_quality:
+      - 史诗覆盖业务需求完整度
+      - 故事符合INVEST原则比例
+      - 验收标准明确度
+      - 优先级排序准确性
+      
+    collaboration_efficiency:
+      - PO和UX协作顺畅度
+      - 需求理解一致性
+      - 分解完成时间
+      - 返工和修正频率
+      
+    delivery_readiness:
+      - 开发团队理解度
+      - 技术移交顺畅度
+      - 迭代规划就绪度
+      - 验收标准可执行性
+
+  handoff_prompts:
+    breakdown_start: "姜尚和嫦娥请开始史诗故事分解，回顾产品需求和用户洞察。"
+    value_stream: "姜尚请梳理端到端价值流程，嫦娥提供用户体验视角。"
+    epic_identification: "基于价值流程识别核心业务能力域，定义史诗。"
+    epic_prioritization: "姜尚主导业务价值评估，嫦娥提供用户体验影响评估。"
+    mvp_definition: "姜尚定义MVP范围，嫦娥验证用户体验完整性。"
+    epic_documentation: "为每个选定史诗创建详细文档。"
+    story_mapping: "协作创建用户故事地图，可视化功能分解。"
+    story_creation: "姜尚创建用户故事，嫦娥提供UX验收标准。"
+    story_refinement: "共同细化故事描述和验收标准。"
+    story_prioritization: "姜尚确定故事优先级排序。"
+    release_planning: "制定渐进式发布计划。"
+    validation: "验证产品待办列表的完整性和一致性。"
+    technical_handoff: "史诗故事分解完成，移交给技术设计层进行架构设计。" 

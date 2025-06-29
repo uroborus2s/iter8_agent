@@ -1,0 +1,52 @@
+bundle:
+  name: 技术设计层团队 (Technical Design Layer)
+  icon: 🏗️
+  description: 负责系统架构设计、技术选型和需求分析的技术核心团队，由系统架构师和业务分析师组成。
+
+# === 团队成员 ===
+team_members:
+  - agent: architect
+    name: 鲁班
+    mythological_role: 建筑设计大师
+    responsibility: 系统架构师，技术蓝图设计者
+    skills: [系统设计, 技术选型, API设计, 架构文档]
+    
+  - agent: analyst
+    name: 文殊菩萨
+    mythological_role: 智慧分析之神
+    responsibility: 业务分析师，需求洞察专家
+    skills: [需求分析, 业务流程, 数据分析, 系统调研]
+
+# === 协作模式 ===
+collaboration_patterns:
+  internal_collaboration:
+    participants: [鲁班, 文殊菩萨]
+    pattern: 设计评审 + 技术咨询
+    artifacts: [系统架构, 技术选型, API设计, 数据模型]
+    frequency: 每个技术设计节点
+    
+  upstream_handoff:
+    from_business_value:
+      source_team: business-value-layer
+      received_artifacts: [PRD, UX规格, 业务约束, 用户需求]
+      collaboration_mode: 需求澄清 + 技术可行性评估
+      
+  downstream_handoff:
+    to_implementation:
+      target_team: implementation-layer
+      handoff_artifacts: [系统架构, 技术文档, 接口定义, 验收标准]
+      collaboration_mode: 技术交底 + 实现指导
+
+# === 决策权限 ===
+decision_authority:
+  technical_decisions:
+    primary_decision_maker: 鲁班 (Architect)
+    consultation_required: [文殊菩萨 (Analyst)]
+    scope: [技术架构, 技术选型, API设计, 性能标准]
+    escalation_path: 元始天尊 (Orchestrator)
+    
+  business_analysis_decisions:
+    primary_decision_maker: 文殊菩萨 (Analyst)
+    consultation_required: [鲁班 (Architect)]
+    scope: [需求解释, 业务流程设计, 数据模型]
+    escalation_path: 鲁班 (Architect) 

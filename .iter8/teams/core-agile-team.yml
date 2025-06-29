@@ -1,0 +1,88 @@
+bundle:
+  name: 核心敏捷团队 (Core Agile Team)
+  icon: ⚡
+  description: 基于封神演义角色的完整敏捷开发团队，从业务价值到技术实现的全链路协作团队。
+
+# === 团队构成 (引用独立团队配置) ===
+sub_teams:
+  - name: business-value-layer
+    description: 业务价值层团队
+    members: [姜尚, 嫦娥]
+    focus: 产品战略和用户体验
+    
+  - name: technical-design-layer
+    description: 技术设计层团队
+    members: [鲁班, 文殊菩萨]
+    focus: 系统架构和需求分析
+    
+  - name: implementation-layer
+    description: 实现层团队
+    members: [哪吒, 杨戬]
+    focus: 代码实现和质量保证
+    
+  - name: process-coordination-layer
+    description: 流程协调层团队
+    members: [太乙真人, 元始天尊]
+    focus: 敏捷流程和团队统筹
+
+# === 整体协作框架 ===
+integration_framework:
+  value_stream_flow:
+    业务价值层 → 技术设计层 → 实现层
+    
+  coordination_overlay:
+    流程协调层贯穿所有层次
+    
+  feedback_loops:
+    - 实现层 → 业务价值层 (用户反馈)
+    - 技术设计层 ↔ 实现层 (技术澄清)
+    - 流程协调层 ↔ 所有层 (流程优化)
+
+# === 跨团队集成点 ===
+integration_points:
+  handoff_ceremonies:
+    business_to_technical: "PRD评审会"
+    technical_to_implementation: "技术交底会"
+    implementation_to_business: "演示反馈会"
+    
+  shared_ceremonies:
+    - 每日站会 (全团队)
+    - 迭代规划 (全团队)
+    - 迭代回顾 (全团队)
+    - 跨层同步会 (各层代表)
+
+agents:
+  - po           # 姜尚 (姜子牙)
+  - ux-expert    # 嫦娥
+  - architect    # 鲁班
+  - analyst      # 文殊菩萨
+  - dev          # 哪吒
+  - qa           # 杨戬 (二郎神)
+  - sm           # 太乙真人
+  - orchestrator # 元始天尊
+
+workflows:
+  - product-documentation      # 业务价值层主工作流
+  - technical-design          # 技术设计层工作流 (待创建)
+  - implementation-cycle      # 实现层工作流 (待创建)
+  - quality-assurance        # 质量保证工作流 (待创建)
+  - agile-process-management # 敏捷流程管理工作流 (待创建)
+
+success_metrics:
+  collaboration_effectiveness:
+    - 跨层移交效率
+    - 返工率
+    - 决策速度
+    - 团队满意度
+    
+  delivery_quality:
+    - 用户满意度
+    - 技术债务水平
+    - 缺陷密度
+    - 交付预测准确性
+    
+  team_growth:
+    - 技能发展指数
+    - 协作能力提升
+    - 知识分享频率
+    - 团队凝聚力 

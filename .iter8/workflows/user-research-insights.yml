@@ -1,0 +1,255 @@
+workflow:
+  id: user-research-insights
+  name: 用户研究洞察工作流
+  description: >-
+    嫦娥(UX专家)主导的用户研究和体验洞察工作流，与姜尚(PO)协作，
+    深入了解用户需求、行为模式和体验痛点，为产品设计提供数据支撑。
+  type: business-value
+  team: business-value-layer
+  project_types:
+    - user-centered-design
+    - new-product-development
+    - experience-optimization
+    - market-research
+
+  sequence:
+    - step: research_planning
+      agent: ux-expert
+      action: 制定用户研究计划
+      creates: research-plan.md
+      collaborates_with: po
+      notes: "嫦娥与姜尚协作制定研究目标、方法论、时间计划和资源需求。"
+
+    - step: user_segmentation
+      agent: ux-expert
+      action: 用户群体分析和细分
+      creates: user-segmentation.md
+      requires: research-plan.md
+      collaborates_with: po
+      notes: "基于业务目标识别目标用户群体，定义用户画像框架。"
+
+    - step: research_execution
+      agent: ux-expert
+      action: 执行用户研究
+      creates: research-data.md
+      requires: user-segmentation.md
+      methods:
+        - 用户访谈
+        - 问卷调查
+        - 行为观察
+        - 竞品分析
+        - 用户测试
+      notes: "嫦娥执行多种研究方法，收集定性和定量数据。"
+
+    - step: data_analysis
+      agent: ux-expert
+      action: 用户数据分析
+      creates: analysis-results.md
+      requires: research-data.md
+      collaborates_with: po
+      notes: "分析研究数据，识别用户需求模式、痛点和机会点。"
+
+    - step: persona_creation
+      agent: ux-expert
+      action: 创建用户画像
+      creates: user-personas.md
+      requires: analysis-results.md
+      uses: user-persona-tmpl
+      notes: "基于研究结果创建详细的用户画像，包括目标、行为、痛点和场景。"
+
+    - step: user_journey_mapping
+      agent: ux-expert
+      action: 用户旅程地图
+      creates: user-journey-map.md
+      requires: 
+        - user-personas.md
+        - analysis-results.md
+      collaborates_with: po
+      notes: "嫦娥绘制用户旅程地图，姜尚提供业务流程输入。"
+
+    - step: insights_synthesis
+      agent: ux-expert
+      action: 洞察综合和提取
+      creates: user-research-insights.md
+      uses: user-research-insights-tmpl
+      requires:
+        - user-personas.md
+        - user-journey-map.md
+        - analysis-results.md
+      notes: "综合所有研究结果，提取关键用户洞察和设计建议。"
+
+    - step: opportunity_identification
+      agents: [ux-expert, po]
+      action: 机会点识别和优先级排序
+      creates: opportunity-matrix.md
+      requires: user-research-insights.md
+      notes: "嫦娥和姜尚协作识别产品机会点，按照用户价值和业务价值排序。"
+
+    - step: design_principles
+      agent: ux-expert
+      action: 制定设计原则
+      creates: design-principles.md
+      requires: user-research-insights.md
+      collaborates_with: po
+      notes: "基于用户洞察制定产品设计原则和体验目标。"
+
+    - step: validation_framework
+      agent: ux-expert
+      action: 建立验证框架
+      creates: validation-framework.md
+      requires: design-principles.md
+      notes: "建立后续设计验证的标准和方法论。"
+
+    - step: insights_validation
+      agents: [ux-expert, po]
+      action: 洞察验证和确认
+      validates: all_research_artifacts
+      notes: "嫦娥和姜尚共同验证研究洞察的准确性和可操作性。"
+
+    - workflow_end:
+      action: handoff_to_product_documentation
+      notes: |
+        用户研究洞察工作完成！现在可以启动产品文档编写流程：
+        
+        1. 确保研究文档已保存到项目中：
+           - docs/user-research-insights.md (核心洞察文档)
+           - docs/user-personas.md (用户画像)
+           - docs/user-journey-map.md (用户旅程)
+           - docs/design-principles.md (设计原则)
+        
+        2. 为产品需求提供支撑：
+           - 用户洞察指导功能优先级
+           - 用户画像支持需求定义
+           - 用户旅程优化产品流程
+        
+        3. 后续工作准备：
+           - 产品需求文档(PRD)编写
+           - 用户体验规格制定
+           - 设计验证标准建立
+
+  collaboration_patterns:
+    ux_led_research:
+      leader: ux-expert
+      supporter: po
+      frequency: 研究执行阶段每日同步，分析阶段每2-3天协作
+      communication: 研究进展实时更新，洞察验证异步协作
+      decision_making: 嫦娥主导研究方法和分析，姜尚提供业务优先级输入
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[开始: 用户研究洞察] --> B[嫦娥+姜尚: 研究计划 → research-plan.md]
+        B --> C[嫦娥+姜尚: 用户细分 → user-segmentation.md]
+        C --> D[嫦娥: 执行研究 → research-data.md]
+        D --> E[嫦娥+姜尚: 数据分析 → analysis-results.md]
+        E --> F[嫦娥: 用户画像 → user-personas.md]
+        F --> G[嫦娥+姜尚: 用户旅程 → user-journey-map.md]
+        G --> H[嫦娥: 洞察综合 → user-research-insights.md]
+        H --> I[嫦娥+姜尚: 机会识别 → opportunity-matrix.md]
+        I --> J[嫦娥+姜尚: 设计原则 → design-principles.md]
+        J --> K[嫦娥: 验证框架 → validation-framework.md]
+        K --> L[嫦娥+姜尚: 洞察验证]
+        L --> M{洞察可靠?}
+        M -->|是| N[进入产品文档编写]
+        M -->|否| O[完善研究洞察]
+        O --> H
+
+        style N fill:#90EE90
+        style B fill:#FFE4B5
+        style E fill:#FFE4B5
+        style G fill:#FFE4B5
+        style I fill:#FFE4B5
+        style J fill:#FFE4B5
+        style L fill:#E6E6FA
+    ```
+
+  research_methods:
+    qualitative:
+      - name: 深度访谈
+        purpose: 了解用户深层需求和动机
+        duration: 60-90分钟/用户
+        participants: 5-8名代表性用户
+        
+      - name: 焦点小组
+        purpose: 探索用户态度和偏好
+        duration: 90-120分钟
+        participants: 6-10名目标用户
+        
+      - name: 用户观察
+        purpose: 了解真实使用行为
+        duration: 自然环境中2-4小时
+        participants: 3-5名用户
+        
+    quantitative:
+      - name: 在线问卷
+        purpose: 验证假设和量化趋势
+        sample_size: 100-500名用户
+        completion_time: 10-15分钟
+        
+      - name: 数据分析
+        purpose: 了解用户行为模式
+        data_sources: 现有产品数据、竞品数据
+        
+      - name: A/B测试
+        purpose: 验证设计决策
+        participants: 根据统计显著性确定
+
+  deliverables:
+    core_documents:
+      - user-research-insights.md (核心洞察)
+      - user-personas.md (用户画像)
+      - user-journey-map.md (用户旅程)
+      - design-principles.md (设计原则)
+      
+    supporting_documents:
+      - research-plan.md (研究计划)
+      - user-segmentation.md (用户细分)
+      - research-data.md (研究数据)
+      - analysis-results.md (分析结果)
+      - opportunity-matrix.md (机会矩阵)
+      - validation-framework.md (验证框架)
+
+  quality_gates:
+    research_rigor:
+      - 研究方法论科学性
+      - 样本代表性充分
+      - 数据收集完整性
+      - 分析结论可靠性
+      
+    business_alignment:
+      - 研究目标与业务目标一致
+      - 洞察可操作性强
+      - 优先级排序合理
+      - 商业价值清晰
+      
+    user_centricity:
+      - 真实用户需求反映
+      - 用户体验痛点识别
+      - 用户价值明确
+      - 设计指导性强
+
+  success_metrics:
+    research_quality:
+      - 用户洞察覆盖度
+      - 研究方法多样性
+      - 数据可信度评分
+      - 洞察新颖性程度
+      
+    business_impact:
+      - 产品决策指导效果
+      - 设计方向准确性
+      - 开发效率提升
+      - 用户满意度预测准确性
+
+  handoff_prompts:
+    research_start: "嫦娥请开始用户研究规划，与姜尚协作确定研究目标和方法。"
+    segmentation: "嫦娥请基于业务目标进行用户群体分析和细分。"
+    execution: "开始执行用户研究，收集用户数据和洞察。"
+    analysis: "嫦娥请分析研究数据，姜尚协作提供业务视角。"
+    persona_creation: "基于分析结果创建详细用户画像。"
+    journey_mapping: "嫦娥绘制用户旅程，姜尚提供业务流程输入。"
+    insights_synthesis: "综合所有研究结果，提取关键用户洞察。"
+    opportunity_identification: "嫦娥和姜尚协作识别产品机会点并排序。"
+    principles_creation: "基于用户洞察制定产品设计原则。"
+    validation: "验证研究洞察的准确性和可操作性。"
+    product_handoff: "用户研究完成，洞察文档交付给产品文档编写流程。" 

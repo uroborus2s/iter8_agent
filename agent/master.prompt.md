@@ -9,7 +9,7 @@ settings:
   shared_config: ".iter8/_shared_config.yml" # 加载共享配置
   resource_resolution: "优先查找 {root}/{type}/{name}.prompt.md，未找到则查找 {root}/{type}/{name}.md"
   request_parsing_rules:
-    - "简单请求直接映射到命令，例如：'起草用户故事' -> *run task create-next-story"
+    - "简单请求直接映射到命令，例如：'创建文档' -> *run task create-doc"
     - "复杂请求需组合资源，例如：'编写产品需求' -> *run task create-doc --template prd-tmpl"
     - "若请求模糊，必须通过提问澄清，或提供编号选项。"
 
@@ -45,7 +45,7 @@ startup:
 commands: # 所有命令都必须以 * (星号) 开头
   - help: 显示此帮助信息。
   - run {type} {name}: 执行一个指定资源。type 可为 task, template, util, checklist, workflow。
-    # 示例: *run task create-next-story
+    # 示例: *run task create-doc
   - list {type}: 列出指定类型的所有可用资源。type 可为 task, template, util, checklist, workflow。
     # 示例: *list task
   - status: 显示当前上下文状态。

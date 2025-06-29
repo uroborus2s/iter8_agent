@@ -1,0 +1,199 @@
+bundle:
+  name: 流程协调层团队 (Process Coordination Layer)
+  icon: 🎯
+  description: 负责敏捷流程管理、团队协调和整体统筹的管理团队，由Scrum Master和团队编排器组成。
+
+# === 团队成员 ===
+team_members:
+  - agent: sm
+    name: 太乙真人
+    mythological_role: 流程指导大师
+    responsibility: Scrum Master，敏捷流程推进者
+    skills: [流程管理, 团队协调, 障碍移除, 持续改进]
+    
+  - agent: orchestrator
+    name: 元始天尊
+    mythological_role: 至高统筹者
+    responsibility: 团队编排器，跨层协调者
+    skills: [团队统筹, 工作流管理, 资源协调, 决策支持]
+
+# === 协作模式 ===
+collaboration_patterns:
+  internal_collaboration:
+    participants: [太乙真人, 元始天尊]
+    pattern: 流程指导 + 整体统筹
+    artifacts: [流程文档, 团队状态, 障碍记录, 改进计划]
+    frequency: 每日同步 + 周度统筹
+    
+  cross_layer_facilitation:
+    全团队协调:
+      participants: [太乙真人, 元始天尊, 各层代表]
+      pattern: 跨层沟通 + 冲突解决
+      frequency: 每周跨团队同步会议
+      
+    流程优化:
+      participants: [太乙真人, 全团队]
+      pattern: 持续改进 + 最佳实践分享
+      frequency: 每个迭代回顾
+
+# === 决策权限 ===
+decision_authority:
+  process_decisions:
+    primary_decision_maker: 太乙真人 (SM)
+    consultation_required: [元始天尊 (Orchestrator)]
+    scope: [工作流程, 团队规范, 会议机制, 持续改进]
+    escalation_path: "无 (流程最终决策者)"
+    
+  coordination_decisions:
+    primary_decision_maker: 元始天尊 (Orchestrator)
+    consultation_required: [太乙真人 (SM)]
+    scope: [资源分配, 优先级协调, 跨层冲突解决, 战略执行]
+    escalation_path: "外部决策者"
+
+# === 冲突解决机制 ===
+conflict_resolution:
+  level_1_peer_resolution:
+    scope: 同层角色间的分歧
+    facilitator: 太乙真人 (SM)
+    process: 直接沟通 → 协作讨论 → 共识达成
+    timeframe: 1-2个工作日
+    
+  level_2_cross_layer_escalation:
+    scope: 跨层协作中的分歧
+    facilitator: 元始天尊 (Orchestrator)
+    escalation_path: 太乙真人 (SM) → 元始天尊 (Orchestrator)
+    process: 问题收集 → 利益相关方会议 → 决策制定
+    timeframe: 2-3个工作日
+    
+  level_3_strategic_escalation:
+    scope: 重大战略或架构分歧
+    facilitator: 元始天尊 (Orchestrator)
+    escalation_path: 元始天尊 (Orchestrator) → 外部决策者
+    process: 问题分析 → 方案评估 → 高层决策
+    timeframe: 1周内
+
+# === 沟通协议 ===
+communication_protocols:
+  daily_syncs:
+    participants: 全团队
+    frequency: 每日
+    duration: 15分钟
+    format: 昨日完成 + 今日计划 + 障碍反馈
+    facilitator: 太乙真人 (SM)
+    
+  cross_team_sync:
+    participants: 各层代表 [姜尚, 鲁班, 哪吒, 太乙真人]
+    frequency: 每周
+    purpose: 跨层协调和整体进度同步
+    facilitator: 元始天尊 (Orchestrator)
+    
+  retrospective_meetings:
+    participants: 全团队
+    frequency: 每个迭代结束
+    purpose: 回顾总结和持续改进
+    facilitator: 太乙真人 (SM)
+    deliverables: [改进行动计划, 最佳实践总结]
+
+# === 流程管理 ===
+process_management:
+  agile_ceremonies:
+    sprint_planning:
+      facilitator: 太乙真人 (SM)
+      participants: 全团队
+      duration: 2小时
+      output: [迭代目标, 任务分解, 工作承诺]
+      
+    daily_standups:
+      facilitator: 太乙真人 (SM)
+      participants: 全团队
+      duration: 15分钟
+      output: [进展同步, 障碍识别, 协作计划]
+      
+    sprint_review:
+      facilitator: 太乙真人 (SM)
+      participants: 全团队 + 利益相关者
+      duration: 1小时
+      output: [交付展示, 反馈收集, 下期规划]
+      
+    retrospective:
+      facilitator: 太乙真人 (SM)
+      participants: 全团队
+      duration: 1小时
+      output: [问题识别, 改进措施, 行动计划]
+
+# === 团队发展 ===
+team_development:
+  mentorship_coordination:
+    - 协调各层间的导师配对
+    - 跟踪团队成长指标
+    - 组织技能分享会议
+    
+  knowledge_sharing_facilitation:
+    - 组织跨层知识分享
+    - 维护最佳实践库
+    - 推动持续学习文化
+    
+  performance_optimization:
+    - 监控团队协作效率
+    - 识别流程瓶颈
+    - 实施改进措施
+
+# === 工作流程 ===
+workflows:
+  - agile-process-management  # 敏捷流程管理工作流
+  - team-coordination        # 团队协调工作流
+  - continuous-improvement   # 持续改进工作流
+
+# === 成功指标 ===
+success_metrics:
+  process_effectiveness:
+    - 迭代目标达成率
+    - 会议效率评分
+    - 流程遵循度
+    - 障碍解决速度
+    
+  team_coordination:
+    - 跨层协作效率
+    - 冲突解决时间
+    - 团队满意度
+    - 沟通质量评分
+    
+  continuous_improvement:
+    - 改进建议实施率
+    - 团队学习频率
+    - 最佳实践采用率
+    - 流程优化效果
+
+# === 工具和产出物 ===
+tools_and_artifacts:
+  process_tools:
+    - 敏捷看板
+    - 燃尽图
+    - 速度图表
+    - 团队仪表板
+    
+  coordination_tools:
+    - 跨团队状态报告
+    - 资源分配矩阵
+    - 冲突解决记录
+    - 决策追踪表
+    
+  improvement_artifacts:
+    - 回顾会议纪要
+    - 改进行动计划
+    - 最佳实践文档
+    - 团队成长报告
+
+# === 质量保证 ===
+quality_assurance:
+  process_quality:
+    - 流程标准化程度
+    - 会议效果评估
+    - 决策质量监控
+    - 沟通效率测量
+    
+  coordination_quality:
+    - 跨层协作顺畅度
+    - 资源配置合理性
+    - 冲突预防有效性
+    - 团队凝聚力水平 
