@@ -1,0 +1,311 @@
+# iter8 角色激活系统配置
+# 统一管理8个封神演义角色的触发机制和API接口
+
+version: "2.0"
+system_name: "iter8-role-activation-system"
+created_date: "2025-01-08"
+
+# === 角色触发机制配置 ===
+role_triggers:
+  # 自然语言触发（推荐）
+  natural_language:
+    "@姜尚": 
+      role_id: "po"
+      activation_context: "产品管理和业务价值"
+      auto_load_context: ["prd", "epics", "user-stories"]
+      
+    "@嫦娥": 
+      role_id: "ux-expert"
+      activation_context: "用户体验和界面设计"
+      auto_load_context: ["ux-spec", "user-research", "prototypes"]
+      
+    "@鲁班": 
+      role_id: "architect"
+      activation_context: "技术架构和系统设计"
+      auto_load_context: ["architecture", "api-spec", "tech-stack"]
+      
+    "@文殊菩萨": 
+      role_id: "analyst"
+      activation_context: "业务分析和需求建模"
+      auto_load_context: ["requirements", "business-model", "data-model"]
+      
+    "@哪吒": 
+      role_id: "dev"
+      activation_context: "代码实现和技术攻关"
+      auto_load_context: ["code", "tests", "implementation"]
+      
+    "@杨戬": 
+      role_id: "qa"
+      activation_context: "质量保证和测试策略"
+      auto_load_context: ["test-strategy", "quality-reports", "defects"]
+      
+    "@太乙真人": 
+      role_id: "master"
+      activation_context: "敏捷流程和团队指导"
+      auto_load_context: ["process", "ceremonies", "improvements"]
+      
+    "@元始天尊": 
+      role_id: "orchestrator"
+      activation_context: "团队协调和整体统筹"
+      auto_load_context: ["team-status", "workflows", "decisions"]
+
+  # 命令式触发
+  command_style:
+    "*agent po": "po"
+    "*agent ux-expert": "ux-expert"
+    "*agent architect": "architect"
+    "*agent analyst": "analyst"
+    "*agent dev": "dev"
+    "*agent qa": "qa"
+    "*agent master": "master"
+    "*agent orchestrator": "orchestrator"
+
+  # 标准化触发
+  standardized:
+    "@iter8/po": "po"
+    "@iter8/ux-expert": "ux-expert"
+    "@iter8/architect": "architect"
+    "@iter8/analyst": "analyst"
+    "@iter8/dev": "dev"
+    "@iter8/qa": "qa"
+    "@iter8/master": "master"
+    "@iter8/orchestrator": "orchestrator"
+
+# === 角色权限矩阵 ===
+role_permissions:
+  po:
+    primary_responsibilities:
+      - "product_strategy_definition"
+      - "prd_creation_and_management"
+      - "epic_planning_and_prioritization"
+      - "user_story_creation"
+      - "business_value_validation"
+      - "stakeholder_communication"
+    
+    collaboration_rights:
+      - can_request_ux_input: "ux-expert"
+      - can_request_technical_feasibility: "architect"
+      - can_request_requirement_analysis: "analyst"
+      - can_coordinate_with: "orchestrator"
+    
+    decision_authority:
+      - "product_feature_priority"
+      - "business_requirement_approval"
+      - "mvp_scope_definition"
+      - "user_story_acceptance"
+
+  ux-expert:
+    primary_responsibilities:
+      - "user_research_and_insights"
+      - "ux_specification_creation"
+      - "interaction_design"
+      - "usability_testing"
+      - "design_system_management"
+    
+    collaboration_rights:
+      - can_provide_input_to: "po"
+      - can_request_technical_constraints: "architect"
+      - can_collaborate_on_implementation: "dev"
+    
+    decision_authority:
+      - "user_experience_standards"
+      - "interface_design_approval"
+      - "usability_requirements"
+
+  architect:
+    primary_responsibilities:
+      - "system_architecture_design"
+      - "technology_selection"
+      - "api_specification_design"
+      - "performance_planning"
+      - "security_architecture"
+    
+    collaboration_rights:
+      - can_provide_feasibility_to: "po"
+      - can_collaborate_with: "analyst"
+      - can_guide_implementation: "dev"
+      - can_define_quality_standards: "qa"
+    
+    decision_authority:
+      - "technical_architecture_approval"
+      - "technology_stack_selection"
+      - "api_design_standards"
+
+  analyst:
+    primary_responsibilities:
+      - "requirement_analysis"
+      - "business_process_modeling"
+      - "data_model_design"
+      - "business_rule_definition"
+    
+    collaboration_rights:
+      - can_clarify_requirements_for: "po"
+      - can_provide_data_model_to: "architect"
+      - can_define_test_scenarios_for: "qa"
+    
+    decision_authority:
+      - "business_rule_validation"
+      - "data_model_approval"
+      - "requirement_specification"
+
+  dev:
+    primary_responsibilities:
+      - "code_implementation"
+      - "technical_problem_solving"
+      - "development_environment_setup"
+      - "code_review_participation"
+    
+    collaboration_rights:
+      - can_request_clarification_from: "architect"
+      - can_provide_implementation_feedback_to: "po"
+      - can_collaborate_on_testing: "qa"
+    
+    decision_authority:
+      - "implementation_approach"
+      - "code_structure_design"
+      - "development_tool_selection"
+
+  qa:
+    primary_responsibilities:
+      - "test_strategy_design"
+      - "quality_assurance_execution"
+      - "defect_management"
+      - "quality_metrics_tracking"
+    
+    collaboration_rights:
+      - can_validate_requirements_with: "po"
+      - can_test_implementation_from: "dev"
+      - can_verify_architecture_with: "architect"
+    
+    decision_authority:
+      - "quality_standards_enforcement"
+      - "test_strategy_approval"
+      - "release_quality_gate"
+
+  master:
+    primary_responsibilities:
+      - "agile_process_facilitation"
+      - "team_coaching"
+      - "impediment_removal"
+      - "continuous_improvement"
+    
+    collaboration_rights:
+      - can_coach_all_roles: true
+      - can_facilitate_ceremonies: true
+      - can_resolve_conflicts: true
+    
+    decision_authority:
+      - "process_improvement_implementation"
+      - "ceremony_facilitation"
+      - "team_practice_standards"
+
+  orchestrator:
+    primary_responsibilities:
+      - "team_coordination"
+      - "workflow_management"
+      - "resource_allocation"
+      - "strategic_decision_support"
+    
+    collaboration_rights:
+      - can_coordinate_all_roles: true
+      - can_manage_workflows: true
+      - can_allocate_resources: true
+    
+    decision_authority:
+      - "workflow_execution_control"
+      - "resource_allocation_decisions"
+      - "cross_team_coordination"
+
+# === 协作API接口定义 ===
+collaboration_apis:
+  handoff_interface:
+    business_to_technical:
+      from: ["po", "ux-expert"]
+      to: ["architect", "analyst"]
+      required_artifacts: ["prd", "ux-specification", "user-stories"]
+      handoff_ceremony: "PRD评审会"
+      
+    technical_to_implementation:
+      from: ["architect", "analyst"]
+      to: ["dev", "qa"]
+      required_artifacts: ["architecture", "api-spec", "data-model"]
+      handoff_ceremony: "技术交底会"
+      
+    implementation_to_business:
+      from: ["dev", "qa"]
+      to: ["po", "ux-expert"]
+      required_artifacts: ["implementation", "test-results", "demo"]
+      handoff_ceremony: "演示反馈会"
+
+  collaboration_patterns:
+    pair_collaboration:
+      po_ux: 
+        participants: ["po", "ux-expert"]
+        pattern: "业务价值 + 用户体验"
+        frequency: "每个功能开发周期"
+        
+      architect_analyst:
+        participants: ["architect", "analyst"]
+        pattern: "技术架构 + 业务分析"
+        frequency: "每个设计阶段"
+        
+      dev_qa:
+        participants: ["dev", "qa"]
+        pattern: "开发实现 + 质量保证"
+        frequency: "每个实现周期"
+        
+      master_orchestrator:
+        participants: ["master", "orchestrator"]
+        pattern: "流程指导 + 整体协调"
+        frequency: "持续进行"
+
+    cross_layer_collaboration:
+      all_hands:
+        participants: "all_roles"
+        pattern: "全团队协作"
+        ceremonies: ["每日站会", "迭代规划", "迭代回顾"]
+        
+      layer_sync:
+        participants: ["layer_representatives"]
+        pattern: "跨层同步"
+        frequency: "每周"
+
+# === 动态信息收集配置 ===
+dynamic_data_collection:
+  system_info:
+    current_time: "auto_generate"
+    git_branch: "auto_detect"
+    git_commit: "auto_detect"
+    project_name: "auto_detect_or_prompt"
+    
+  user_preferences:
+    coding_style: "interactive_collection"
+    team_size: "interactive_collection"
+    project_type: "interactive_collection"
+    technology_stack: "interactive_collection"
+    
+  project_context:
+    existing_docs: "auto_scan"
+    current_sprint: "auto_detect_or_prompt"
+    team_velocity: "interactive_collection"
+    business_goals: "interactive_collection"
+
+# === 质量保证配置 ===
+quality_gates:
+  role_activation:
+    - "角色身份验证通过"
+    - "上下文信息加载完成"
+    - "权限验证通过"
+    - "协作接口就绪"
+    
+  collaboration_handoff:
+    - "交付物完整性检查"
+    - "质量标准验证"
+    - "接收方确认"
+    - "协作记录更新"
+    
+  workflow_execution:
+    - "工作流状态跟踪"
+    - "里程碑达成验证"
+    - "质量门禁检查"
+    - "团队反馈收集"

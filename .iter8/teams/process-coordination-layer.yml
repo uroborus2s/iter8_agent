@@ -5,11 +5,11 @@ bundle:
 
 # === 团队成员 ===
 team_members:
-  - agent: sm
+  - agent: master
     name: 太乙真人
-    mythological_role: 流程指导大师
-    responsibility: Scrum Master，敏捷流程推进者
-    skills: [流程管理, 团队协调, 障碍移除, 持续改进]
+    mythological_role: 修行导师
+    responsibility: 敏捷教练，流程指导专家
+    skills: [敏捷流程指导, 团队建设, 持续改进, 仪式引导]
     
   - agent: orchestrator
     name: 元始天尊

@@ -1,0 +1,343 @@
+# iter8 动态模板系统配置
+# 支持交互式信息收集和自动化数据获取的统一模板系统
+
+version: "2.0"
+system_name: "iter8-dynamic-template-system"
+created_date: "2025-01-08"
+
+# === 交互式信息收集机制 ===
+interactive_data_collection:
+  
+  user_information:
+    creator_info:
+      prompt: "请提供文档创建者信息"
+      fields:
+        - name: "creator_name"
+          type: "text"
+          prompt: "创建者姓名"
+          required: true
+          default: "auto_detect_git_user"
+          
+        - name: "creator_role"
+          type: "select"
+          prompt: "创建者角色"
+          options: ["产品经理", "架构师", "开发工程师", "UX设计师", "业务分析师", "QA工程师", "项目经理"]
+          required: true
+          
+        - name: "creator_email"
+          type: "email"
+          prompt: "联系邮箱"
+          required: false
+          default: "auto_detect_git_email"
+    
+    reviewer_info:
+      prompt: "请指定文档审核人信息"
+      fields:
+        - name: "reviewer_name"
+          type: "text"
+          prompt: "审核人姓名"
+          required: true
+          suggestions: "team_members_list"
+          
+        - name: "reviewer_role"
+          type: "select"
+          prompt: "审核人角色"
+          options: ["技术负责人", "产品负责人", "架构师", "团队Lead", "业务专家"]
+          required: true
+          
+        - name: "review_deadline"
+          type: "date"
+          prompt: "审核截止日期"
+          required: false
+          default: "auto_calculate_3_days"
+
+  technical_preferences:
+    coding_style:
+      prompt: "请配置代码风格偏好"
+      fields:
+        - name: "language_preference"
+          type: "multi_select"
+          prompt: "主要编程语言"
+          options: ["TypeScript", "JavaScript", "Python", "Java", "Go", "Rust", "C#"]
+          required: true
+          
+        - name: "framework_preference"
+          type: "conditional_select"
+          prompt: "首选框架"
+          conditions:
+            "TypeScript": ["React", "Vue", "Angular", "Next.js", "Nuxt.js"]
+            "Python": ["Django", "FastAPI", "Flask", "Streamlit"]
+            "Java": ["Spring Boot", "Quarkus", "Micronaut"]
+          required: true
+          
+        - name: "code_style_guide"
+          type: "select"
+          prompt: "代码规范"
+          options: ["Google Style", "Airbnb Style", "Standard", "Prettier", "自定义"]
+          required: true
+          
+        - name: "testing_framework"
+          type: "select"
+          prompt: "测试框架偏好"
+          options: ["Jest", "Vitest", "Cypress", "Playwright", "PyTest", "JUnit"]
+          required: false
+
+  team_collaboration:
+    team_settings:
+      prompt: "请配置团队协作规范"
+      fields:
+        - name: "team_size"
+          type: "number"
+          prompt: "团队规模"
+          min: 1
+          max: 20
+          required: true
+          
+        - name: "sprint_length"
+          type: "select"
+          prompt: "Sprint周期"
+          options: ["1周", "2周", "3周", "4周"]
+          default: "2周"
+          required: true
+          
+        - name: "communication_tools"
+          type: "multi_select"
+          prompt: "沟通工具"
+          options: ["Slack", "Teams", "Discord", "钉钉", "企业微信", "邮件"]
+          required: true
+          
+        - name: "project_management_tool"
+          type: "select"
+          prompt: "项目管理工具"
+          options: ["Jira", "Azure DevOps", "GitHub Projects", "Trello", "Linear", "Notion"]
+          required: true
+
+# === 系统集成的动态数据 ===
+system_integrated_data:
+  
+  temporal_data:
+    current_time:
+      source: "system_clock"
+      format: "YYYY-MM-DD HH:mm:ss"
+      timezone: "Asia/Shanghai"
+      
+    creation_date:
+      source: "system_clock"
+      format: "YYYY-MM-DD"
+      
+    last_modified:
+      source: "file_system"
+      format: "YYYY-MM-DD HH:mm:ss"
+      auto_update: true
+
+  git_integration:
+    current_branch:
+      source: "git_command"
+      command: "git branch --show-current"
+      fallback: "main"
+      
+    latest_commit:
+      source: "git_command"
+      command: "git log -1 --format='%H %s'"
+      format: "hash:message"
+      
+    repository_url:
+      source: "git_command"
+      command: "git config --get remote.origin.url"
+      
+    commit_author:
+      source: "git_command"
+      command: "git config user.name"
+      
+    commit_email:
+      source: "git_command"
+      command: "git config user.email"
+
+  project_context:
+    project_name:
+      source: "auto_detect"
+      methods: ["package_json", "directory_name", "git_repo_name"]
+      prompt_if_not_found: true
+      
+    project_type:
+      source: "auto_detect"
+      indicators:
+        "web_app": ["package.json", "src/", "public/"]
+        "mobile_app": ["android/", "ios/", "flutter/"]
+        "api_service": ["api/", "routes/", "controllers/"]
+        "library": ["lib/", "dist/", "index.ts"]
+      prompt_if_ambiguous: true
+      
+    technology_stack:
+      source: "auto_detect"
+      files_to_scan: ["package.json", "requirements.txt", "pom.xml", "Cargo.toml"]
+      
+    current_sprint:
+      source: "project_management_integration"
+      fallback: "prompt_user"
+
+# === 核心模板实现 ===
+core_templates:
+  
+  user_story_template:
+    file_name: "user-story-{{story_id}}.md"
+    dynamic_fields:
+      - "{{story_id}}": "auto_increment"
+      - "{{creation_date}}": "system_date"
+      - "{{creator_name}}": "interactive_or_git"
+      - "{{reviewer_name}}": "interactive"
+      - "{{sprint_number}}": "current_sprint_or_prompt"
+      
+    interactive_prompts:
+      - field: "user_persona"
+        prompt: "目标用户角色"
+        type: "select"
+        options: ["终端用户", "管理员", "开发者", "客服人员", "业务用户"]
+        
+      - field: "business_value"
+        prompt: "业务价值描述"
+        type: "text_area"
+        guidance: "描述此功能为业务带来的具体价值"
+        
+      - field: "acceptance_criteria"
+        prompt: "验收标准"
+        type: "checklist_builder"
+        min_items: 3
+        
+      - field: "story_points"
+        prompt: "故事点估算"
+        type: "select"
+        options: ["1", "2", "3", "5", "8", "13", "21"]
+
+  technical_design_template:
+    file_name: "technical-design-{{component_name}}.md"
+    dynamic_fields:
+      - "{{component_name}}": "interactive"
+      - "{{architecture_type}}": "interactive"
+      - "{{technology_stack}}": "auto_detect_or_interactive"
+      - "{{performance_requirements}}": "interactive"
+      
+    interactive_prompts:
+      - field: "component_name"
+        prompt: "组件/模块名称"
+        type: "text"
+        validation: "alphanumeric_underscore"
+        
+      - field: "architecture_pattern"
+        prompt: "架构模式"
+        type: "select"
+        options: ["MVC", "MVP", "MVVM", "微服务", "单体", "分层架构", "六边形架构"]
+        
+      - field: "scalability_requirements"
+        prompt: "扩展性要求"
+        type: "multi_select"
+        options: ["水平扩展", "垂直扩展", "数据库分片", "缓存策略", "负载均衡"]
+
+  code_generation_template:
+    file_name: "{{component_type}}-{{component_name}}.{{file_extension}}"
+    dynamic_fields:
+      - "{{component_type}}": "interactive"
+      - "{{component_name}}": "interactive"
+      - "{{file_extension}}": "language_based"
+      - "{{coding_standards}}": "team_preferences"
+      
+    code_patterns:
+      api_endpoint:
+        languages: ["typescript", "python", "java"]
+        includes: ["error_handling", "validation", "logging", "testing"]
+        
+      data_model:
+        languages: ["typescript", "python", "java"]
+        includes: ["validation", "serialization", "relationships"]
+        
+      ui_component:
+        frameworks: ["react", "vue", "angular"]
+        includes: ["props_interface", "styling", "testing", "storybook"]
+
+  test_plan_template:
+    file_name: "test-plan-{{feature_name}}.md"
+    dynamic_fields:
+      - "{{feature_name}}": "interactive"
+      - "{{test_types}}": "interactive_multi_select"
+      - "{{testing_framework}}": "team_preferences"
+      
+    test_categories:
+      unit_tests:
+        coverage_target: "80%"
+        frameworks: "team_preference"
+        
+      integration_tests:
+        scope: "api_endpoints"
+        tools: ["postman", "newman", "rest_assured"]
+        
+      e2e_tests:
+        scope: "user_workflows"
+        tools: ["cypress", "playwright", "selenium"]
+
+  workflow_template:
+    file_name: "workflow-{{workflow_name}}.yml"
+    dynamic_fields:
+      - "{{workflow_name}}": "interactive"
+      - "{{participants}}": "interactive_multi_select"
+      - "{{git_strategy}}": "team_preferences"
+      
+    workflow_patterns:
+      feature_development:
+        stages: ["planning", "design", "implementation", "testing", "review", "deployment"]
+        
+      bug_fix:
+        stages: ["investigation", "fix", "testing", "review", "hotfix_deployment"]
+        
+      release:
+        stages: ["preparation", "testing", "documentation", "deployment", "monitoring"]
+
+# === 模板生成引擎 ===
+template_engine:
+  
+  processing_pipeline:
+    - "collect_interactive_data"
+    - "gather_system_data"
+    - "apply_team_preferences"
+    - "validate_required_fields"
+    - "generate_template_content"
+    - "apply_formatting_rules"
+    - "save_to_designated_location"
+    
+  validation_rules:
+    required_fields:
+      - "creation_date"
+      - "creator_name"
+      - "document_title"
+      
+    format_standards:
+      - "markdown_compliance"
+      - "yaml_front_matter"
+      - "consistent_heading_structure"
+      
+  output_locations:
+    user_stories: "docs/stories/"
+    technical_designs: "docs/architecture/"
+    test_plans: "docs/testing/"
+    workflows: ".iter8/workflows/"
+    code_templates: "templates/code/"
+
+# === 质量保证 ===
+quality_assurance:
+  
+  template_validation:
+    - "all_placeholders_resolved"
+    - "required_sections_present"
+    - "format_consistency_check"
+    - "link_validity_verification"
+    
+  user_experience:
+    - "intuitive_prompting_flow"
+    - "helpful_guidance_text"
+    - "smart_defaults_provided"
+    - "error_handling_graceful"
+    
+  system_integration:
+    - "git_integration_working"
+    - "file_system_permissions"
+    - "team_tool_connectivity"
+    - "data_persistence_reliable"

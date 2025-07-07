@@ -1,0 +1,201 @@
+workflow:
+  id: technical-design
+  name: 技术设计工作流
+  description: >-
+    技术设计层的核心工作流，由鲁班(架构师)和文殊菩萨(业务分析师)协作，
+    将业务需求转化为技术设计和实现方案。
+  type: technical-design
+  team: technical-design-layer
+  project_types:
+    - system-architecture
+    - api-design
+    - data-modeling
+    - technology-selection
+
+  prerequisites:
+    - prd.md (产品需求文档)
+    - user-stories/ (用户故事)
+    - epics/ (史诗定义)
+
+  sequence:
+    - step: requirement_analysis
+      agent: analyst
+      action: 深度需求分析
+      analyzes: 
+        - docs/prd.md
+        - docs/user-stories/
+      creates: requirement-analysis.md
+      notes: "文殊菩萨分析业务需求，识别技术约束和非功能需求。"
+
+    - step: system_architecture_design
+      agent: architect
+      action: 系统架构设计
+      creates: system-architecture.md
+      uses: architecture-tmpl
+      requires: requirement-analysis.md
+      collaborates_with: analyst
+      notes: "鲁班设计整体系统架构，文殊菩萨提供业务逻辑支持。"
+
+    - step: technology_selection
+      agent: architect
+      action: 技术栈选择和评估
+      creates: technology-stack.md
+      requires: system-architecture.md
+      notes: "鲁班基于架构需求选择合适的技术栈和工具。"
+
+    - step: data_model_design
+      agent: analyst
+      action: 数据模型设计
+      creates: data-model.md
+      requires: 
+        - requirement-analysis.md
+        - system-architecture.md
+      collaborates_with: architect
+      notes: "文殊菩萨设计数据模型，鲁班确保架构兼容性。"
+
+    - step: api_specification
+      agent: architect
+      action: API接口设计
+      creates: api-specification.md
+      uses: api-spec-tmpl
+      requires:
+        - system-architecture.md
+        - data-model.md
+      notes: "鲁班设计API接口规范，确保系统间的有效通信。"
+
+    - step: security_design
+      agent: architect
+      action: 安全架构设计
+      creates: security-architecture.md
+      requires: system-architecture.md
+      collaborates_with: analyst
+      notes: "鲁班设计安全架构，文殊菩萨提供业务安全需求。"
+
+    - step: performance_planning
+      agent: architect
+      action: 性能规划和优化策略
+      creates: performance-plan.md
+      requires: 
+        - system-architecture.md
+        - technology-stack.md
+      notes: "鲁班制定性能目标和优化策略。"
+
+    - step: technical_feasibility_validation
+      agent: architect
+      action: 技术可行性验证
+      validates:
+        - system-architecture.md
+        - technology-stack.md
+        - api-specification.md
+      collaborates_with: analyst
+      notes: "鲁班验证技术方案的可行性，文殊菩萨确认业务需求满足。"
+
+    - step: implementation_guidance
+      agent: architect
+      action: 实现指导文档
+      creates: implementation-guide.md
+      requires: "all_technical_designs"
+      notes: "鲁班为开发团队提供详细的实现指导。"
+
+  outputs:
+    primary:
+      - docs/system-architecture.md
+      - docs/api-specification.md
+      - docs/data-model.md
+      - docs/technology-stack.md
+    
+    secondary:
+      - docs/requirement-analysis.md
+      - docs/security-architecture.md
+      - docs/performance-plan.md
+      - docs/implementation-guide.md
+
+  handoff_to:
+    - implementation-layer
+    - quality-assurance-workflow
+
+  quality_gates:
+    - architecture_review_passed
+    - technology_stack_approved
+    - api_specification_validated
+    - data_model_verified
+    - security_requirements_met
+    - performance_targets_defined
+
+  estimated_duration: "5-15 工作日"
+
+  success_criteria:
+    - 系统架构清晰且可扩展
+    - 技术栈选择合理且团队熟悉
+    - API设计符合RESTful或GraphQL标准
+    - 数据模型支持业务需求
+    - 安全架构满足合规要求
+    - 性能目标明确且可达成
+    - 实现指导详细且可操作
+
+  collaboration_patterns:
+    architect_analyst_sync:
+      participants: [鲁班, 文殊菩萨]
+      frequency: daily
+      duration: "30分钟"
+      focus: "技术方案与业务需求对齐"
+      
+    technical_review:
+      participants: [鲁班, 文殊菩萨, 哪吒]
+      frequency: "每个主要设计完成后"
+      duration: "60分钟"
+      purpose: "技术方案可行性评估"
+      
+    stakeholder_alignment:
+      participants: [鲁班, 文殊菩萨, 姜尚]
+      frequency: "每个里程碑"
+      duration: "90分钟"
+      purpose: "确保技术方案支持业务目标"
+
+  tools_integration:
+    architecture_design:
+      - draw.io
+      - lucidchart
+      - miro
+    
+    api_design:
+      - swagger
+      - postman
+      - insomnia
+    
+    data_modeling:
+      - dbdiagram.io
+      - mysql_workbench
+      - mongodb_compass
+
+  metrics:
+    design_quality:
+      - architecture_complexity_score
+      - api_consistency_rating
+      - data_model_normalization_level
+    
+    feasibility:
+      - technology_risk_assessment
+      - implementation_complexity_score
+      - team_skill_gap_analysis
+    
+    alignment:
+      - business_requirement_coverage
+      - stakeholder_satisfaction
+      - technical_debt_projection
+
+  risk_mitigation:
+    technology_risks:
+      - proof_of_concept_development
+      - technology_spike_investigation
+      - fallback_technology_options
+    
+    complexity_risks:
+      - modular_design_approach
+      - incremental_implementation_plan
+      - complexity_monitoring
+    
+    integration_risks:
+      - early_integration_testing
+      - api_contract_validation
+      - dependency_management_strategy

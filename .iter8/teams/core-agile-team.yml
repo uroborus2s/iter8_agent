@@ -58,15 +58,14 @@ agents:
   - analyst      # 文殊菩萨
   - dev          # 哪吒
   - qa           # 杨戬 (二郎神)
-  - sm           # 太乙真人
+  - master       # 太乙真人
   - orchestrator # 元始天尊
 
 workflows:
   - product-documentation      # 业务价值层主工作流
-  - technical-design          # 技术设计层工作流 (待创建)
-  - implementation-cycle      # 实现层工作流 (待创建)
-  - quality-assurance        # 质量保证工作流 (待创建)
-  - agile-process-management # 敏捷流程管理工作流 (待创建)
+  - epic-story-breakdown       # 史诗故事分解工作流
+  - technical-design           # 技术设计层工作流
+  - implementation-cycle       # 实现层工作流
 
 success_metrics:
   collaboration_effectiveness:
