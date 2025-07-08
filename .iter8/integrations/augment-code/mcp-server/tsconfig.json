@@ -9,18 +9,13 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }

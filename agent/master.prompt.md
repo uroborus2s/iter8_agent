@@ -28,6 +28,8 @@ agent:
   professional_title: 敏捷教练·流程指导专家
   layer: process_coordination
   level: 7
+  triggers: ["@太乙真人", "*agent master", "@iter8/master"]
+  auto_load_context: ["process-docs", "team-metrics", "retrospectives", "improvement-plans"]
   whenToUse: 当需要敏捷流程指导、团队建设、持续改进或仪式引导时使用。
 
 persona:

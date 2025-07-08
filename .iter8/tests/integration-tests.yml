@@ -1,0 +1,279 @@
+# iter8 集成测试套件
+# 验证Cursor IDE、Augment Code、Gemini CLI三大工具集成的完整性
+
+test_suite:
+  name: "iter8 AI编程工具集成测试"
+  version: "2.1"
+  created_date: "2025-01-08"
+  description: "全面测试iter8与主流AI编程工具的集成功能"
+
+# === 测试环境配置 ===
+test_environment:
+  required_tools:
+    - name: "Cursor IDE"
+      version: "1.2+"
+      config_file: ".cursor-rules"
+      test_features: ["Agent Planning", "Background Agent", "Memories"]
+    
+    - name: "Augment Code"
+      version: "latest"
+      mcp_server: "iter8-agile-team"
+      test_features: ["MCP Integration", "Context Loading", "Tool Execution"]
+    
+    - name: "Gemini CLI"
+      version: "latest"
+      cli_tool: "iter8"
+      test_features: ["Role Activation", "Workflow Execution", "Template Generation"]
+
+  test_data:
+    sample_project: "test-ecommerce-platform"
+    test_roles: ["po", "ux-expert", "architect", "dev", "qa"]
+    test_workflows: ["product-documentation", "technical-design", "implementation-cycle"]
+
+# === 角色激活测试 ===
+role_activation_tests:
+  - test_id: "RA001"
+    name: "Cursor IDE角色激活测试"
+    description: "验证在Cursor IDE中激活iter8角色"
+    steps:
+      - action: "打开Cursor IDE"
+        expected: "IDE正常启动"
+      - action: "输入 '@姜尚 创建产品需求文档'"
+        expected: "激活产品负责人角色，加载PRD模板"
+      - action: "验证上下文加载"
+        expected: "自动加载prd.md, epics/, user-stories/"
+      - action: "检查协作建议"
+        expected: "建议与@嫦娥协作进行用户体验设计"
+    success_criteria:
+      - "角色激活响应时间 < 2秒"
+      - "上下文加载完整"
+      - "协作建议准确"
+
+  - test_id: "RA002"
+    name: "Augment Code MCP角色激活测试"
+    description: "验证通过MCP服务器激活角色"
+    steps:
+      - action: "启动iter8 MCP服务器"
+        expected: "服务器正常启动，监听连接"
+      - action: "Augment Code连接MCP服务器"
+        expected: "连接成功，工具列表加载"
+      - action: "调用activate_role工具"
+        expected: "角色成功激活，返回角色信息"
+      - action: "验证角色能力"
+        expected: "角色能力列表正确"
+    success_criteria:
+      - "MCP连接稳定"
+      - "工具调用成功率 > 95%"
+      - "角色信息准确"
+
+  - test_id: "RA003"
+    name: "Gemini CLI角色激活测试"
+    description: "验证通过CLI激活角色"
+    steps:
+      - action: "执行 'iter8 role activate po'"
+        expected: "激活产品负责人角色"
+      - action: "执行 'iter8 role list'"
+        expected: "显示所有可用角色"
+      - action: "执行 'iter8 role info po'"
+        expected: "显示角色详细信息"
+    success_criteria:
+      - "CLI命令响应正常"
+      - "角色信息显示完整"
+      - "错误处理优雅"
+
+# === 工作流执行测试 ===
+workflow_execution_tests:
+  - test_id: "WE001"
+    name: "产品文档工作流测试"
+    description: "验证完整的产品文档创建工作流"
+    workflow: "product-documentation"
+    participants: ["po", "ux-expert"]
+    steps:
+      - step: "requirement_gathering"
+        agent: "po"
+        action: "创建项目简介"
+        validation: "project-brief.md文件生成"
+      - step: "user_research"
+        agent: "ux-expert"
+        action: "进行用户研究"
+        validation: "user-research-insights.md文件生成"
+      - step: "prd_creation"
+        agent: "po"
+        action: "创建PRD文档"
+        validation: "prd.md文件生成"
+      - step: "collaborative_review"
+        agents: ["po", "ux-expert"]
+        action: "协作审查"
+        validation: "文档质量检查通过"
+    success_criteria:
+      - "所有步骤按序执行"
+      - "文档生成完整"
+      - "质量门禁通过"
+      - "角色协作顺畅"
+
+  - test_id: "WE002"
+    name: "技术设计工作流测试"
+    description: "验证技术设计层工作流"
+    workflow: "technical-design"
+    participants: ["architect", "analyst"]
+    steps:
+      - step: "requirement_analysis"
+        agent: "analyst"
+        action: "深度需求分析"
+        validation: "requirement-analysis.md生成"
+      - step: "system_architecture_design"
+        agent: "architect"
+        action: "系统架构设计"
+        validation: "system-architecture.md生成"
+      - step: "api_specification"
+        agent: "architect"
+        action: "API接口设计"
+        validation: "api-specification.md生成"
+    success_criteria:
+      - "技术文档完整"
+      - "架构设计合理"
+      - "API规格标准"
+
+# === 协作机制测试 ===
+collaboration_tests:
+  - test_id: "CO001"
+    name: "跨层协作测试"
+    description: "验证不同层级角色间的协作"
+    scenario: "从业务需求到技术实现的完整协作"
+    participants:
+      business_value: ["po", "ux-expert"]
+      technical_design: ["architect", "analyst"]
+      implementation: ["dev", "qa"]
+    collaboration_patterns:
+      - pattern: "PRD评审会"
+        participants: ["po", "ux-expert", "architect", "analyst"]
+        duration: "90分钟"
+        deliverables: ["技术设计任务清单"]
+      - pattern: "技术交底会"
+        participants: ["architect", "analyst", "dev", "qa"]
+        duration: "60分钟"
+        deliverables: ["实现指导文档"]
+    success_criteria:
+      - "交接仪式完整执行"
+      - "交付物质量合格"
+      - "协作效率高"
+
+# === 质量保证测试 ===
+quality_assurance_tests:
+  - test_id: "QA001"
+    name: "质量门禁测试"
+    description: "验证工作流质量门禁机制"
+    test_scenarios:
+      - scenario: "入口标准检查"
+        condition: "工作流启动前"
+        validation: "前置条件满足"
+      - scenario: "里程碑门禁"
+        condition: "关键步骤完成后"
+        validation: "质量标准达成"
+      - scenario: "出口标准检查"
+        condition: "工作流结束前"
+        validation: "交付物完整"
+    success_criteria:
+      - "质量门禁有效"
+      - "标准检查准确"
+      - "问题及时发现"
+
+  - test_id: "QA002"
+    name: "文档质量测试"
+    description: "验证生成文档的质量"
+    quality_dimensions:
+      - dimension: "完整性"
+        criteria: "所有必需字段填写"
+        target: "100%"
+      - dimension: "一致性"
+        criteria: "角色定义统一"
+        target: "100%"
+      - dimension: "可读性"
+        criteria: "文档结构清晰"
+        target: "> 4.5/5.0"
+    success_criteria:
+      - "文档质量达标"
+      - "模板使用正确"
+      - "内容准确完整"
+
+# === 性能测试 ===
+performance_tests:
+  - test_id: "PE001"
+    name: "响应时间测试"
+    description: "验证系统响应性能"
+    metrics:
+      - metric: "角色激活时间"
+        target: "< 2秒"
+        measurement: "从触发到激活完成"
+      - metric: "模板生成时间"
+        target: "< 5秒"
+        measurement: "从请求到文档生成"
+      - metric: "上下文加载时间"
+        target: "< 3秒"
+        measurement: "相关文档加载完成"
+    success_criteria:
+      - "所有指标达到目标"
+      - "性能稳定"
+      - "无明显延迟"
+
+# === 错误处理测试 ===
+error_handling_tests:
+  - test_id: "EH001"
+    name: "异常情况处理测试"
+    description: "验证系统错误处理能力"
+    error_scenarios:
+      - scenario: "无效角色激活"
+        trigger: "@无效角色"
+        expected: "友好错误提示"
+      - scenario: "工作流中断"
+        trigger: "步骤执行失败"
+        expected: "自动重试或回滚"
+      - scenario: "文件缺失"
+        trigger: "模板文件不存在"
+        expected: "使用默认模板"
+    success_criteria:
+      - "错误处理优雅"
+      - "用户体验友好"
+      - "系统稳定性高"
+
+# === 集成验证标准 ===
+integration_validation:
+  overall_success_criteria:
+    - "所有角色激活测试通过"
+    - "核心工作流执行成功"
+    - "协作机制运行正常"
+    - "质量保证有效"
+    - "性能指标达标"
+    - "错误处理完善"
+  
+  acceptance_threshold:
+    - "测试通过率 > 95%"
+    - "性能指标达成率 > 90%"
+    - "用户满意度 > 4.5/5.0"
+  
+  continuous_monitoring:
+    - "每日自动化测试"
+    - "每周性能监控"
+    - "每月用户反馈收集"
+
+# === 测试执行计划 ===
+execution_plan:
+  phases:
+    - phase: "单元测试"
+      duration: "1天"
+      focus: "个别功能验证"
+    - phase: "集成测试"
+      duration: "2天"
+      focus: "工具间集成验证"
+    - phase: "端到端测试"
+      duration: "1天"
+      focus: "完整流程验证"
+    - phase: "性能测试"
+      duration: "1天"
+      focus: "性能指标验证"
+  
+  total_duration: "5工作日"
+  required_resources:
+    - "测试环境配置"
+    - "测试数据准备"
+    - "自动化测试脚本"

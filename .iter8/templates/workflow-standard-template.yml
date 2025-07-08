@@ -1,0 +1,243 @@
+# iter8 标准工作流模板
+
+# === 工作流基本信息 ===
+workflow:
+  id: "{{workflow_id}}"
+  name: "{{workflow_name}}"
+  description: "{{workflow_description}}"
+  version: "2.1"
+  created_date: "{{current_date}}"
+  type: "{{workflow_type}}" # business-value | technical-design | implementation | process-coordination
+  team: "{{responsible_team}}" # business-value-layer | technical-design-layer | implementation-layer | process-coordination-layer
+  
+  # 适用的项目类型
+  project_types:
+    - "{{project_type_1}}"
+    - "{{project_type_2}}"
+  
+  # 前置条件
+  prerequisites:
+    documents:
+      - "{{required_document_1}}"
+      - "{{required_document_2}}"
+    conditions:
+      - "{{prerequisite_condition_1}}"
+      - "{{prerequisite_condition_2}}"
+    quality_gates:
+      - "{{prerequisite_quality_gate_1}}"
+
+# === 工作流执行序列 ===
+sequence:
+  - step: "{{step_id_1}}"
+    name: "{{step_name_1}}"
+    agent: "{{responsible_agent}}" # po | ux-expert | architect | analyst | dev | qa | master | orchestrator
+    action: "{{specific_action_description}}"
+    
+    # 输入要求
+    inputs:
+      required:
+        - "{{required_input_1}}"
+        - "{{required_input_2}}"
+      optional:
+        - "{{optional_input_1}}"
+    
+    # 输出产物
+    outputs:
+      creates:
+        - "{{output_document_1}}"
+        - "{{output_document_2}}"
+      updates:
+        - "{{updated_document_1}}"
+    
+    # 使用的模板和工具
+    uses:
+      templates:
+        - "{{template_name_1}}"
+      checklists:
+        - "{{checklist_name_1}}"
+      tools:
+        - "{{tool_name_1}}"
+    
+    # 协作要求
+    collaborates_with:
+      - agent: "{{collaborating_agent}}"
+        interaction_type: "{{sync|async|review|approval}}"
+        frequency: "{{daily|weekly|per_milestone}}"
+    
+    # 质量标准
+    quality_criteria:
+      - "{{quality_criterion_1}}"
+      - "{{quality_criterion_2}}"
+    
+    # 完成条件
+    completion_criteria:
+      - "{{completion_criterion_1}}"
+      - "{{completion_criterion_2}}"
+    
+    # 验证方式
+    validation:
+      method: "{{validation_method}}" # checklist | peer_review | automated_test | stakeholder_approval
+      validator: "{{validator_agent}}"
+      criteria: "{{validation_criteria}}"
+    
+    # 估算时间
+    estimated_duration: "{{duration_estimate}}"
+    
+    # 执行说明
+    notes: "{{detailed_execution_notes}}"
+
+# === 工作流输出 ===
+outputs:
+  primary:
+    - "{{primary_output_1}}"
+    - "{{primary_output_2}}"
+  secondary:
+    - "{{secondary_output_1}}"
+    - "{{secondary_output_2}}"
+  metrics:
+    - "{{metric_1}}"
+    - "{{metric_2}}"
+
+# === 交接机制 ===
+handoff:
+  to:
+    - workflow: "{{next_workflow_id}}"
+      team: "{{next_team}}"
+      trigger_condition: "{{handoff_trigger}}"
+      handoff_ceremony:
+        name: "{{ceremony_name}}"
+        participants: ["{{participant_1}}", "{{participant_2}}"]
+        duration: "{{ceremony_duration}}"
+        agenda:
+          - "{{agenda_item_1}}"
+          - "{{agenda_item_2}}"
+        deliverables:
+          - "{{handoff_deliverable_1}}"
+          - "{{handoff_deliverable_2}}"
+  
+  from:
+    - workflow: "{{previous_workflow_id}}"
+      expected_inputs: ["{{expected_input_1}}", "{{expected_input_2}}"]
+
+# === 质量门禁 ===
+quality_gates:
+  entry_criteria:
+    - name: "{{entry_criterion_1}}"
+      description: "{{entry_description_1}}"
+      validation_method: "{{entry_validation_1}}"
+  
+  milestone_gates:
+    - milestone: "{{milestone_name_1}}"
+      criteria:
+        - "{{milestone_criterion_1}}"
+        - "{{milestone_criterion_2}}"
+      validation_method: "{{milestone_validation}}"
+  
+  exit_criteria:
+    - name: "{{exit_criterion_1}}"
+      description: "{{exit_description_1}}"
+      validation_method: "{{exit_validation_1}}"
+
+# === 成功标准 ===
+success_criteria:
+  functional:
+    - "{{functional_criterion_1}}"
+    - "{{functional_criterion_2}}"
+  quality:
+    - "{{quality_criterion_1}}"
+    - "{{quality_criterion_2}}"
+  business:
+    - "{{business_criterion_1}}"
+    - "{{business_criterion_2}}"
+
+# === 协作模式 ===
+collaboration_patterns:
+  "{{pattern_name_1}}":
+    participants: ["{{participant_1}}", "{{participant_2}}"]
+    frequency: "{{frequency}}"
+    duration: "{{duration}}"
+    format: "{{sync|async|hybrid}}"
+    purpose: "{{collaboration_purpose}}"
+    agenda:
+      - "{{agenda_item_1}}"
+      - "{{agenda_item_2}}"
+    outcomes:
+      - "{{expected_outcome_1}}"
+      - "{{expected_outcome_2}}"
+
+# === 风险管理 ===
+risk_management:
+  identified_risks:
+    - risk: "{{risk_description_1}}"
+      probability: "{{high|medium|low}}"
+      impact: "{{high|medium|low}}"
+      mitigation: "{{mitigation_strategy_1}}"
+      owner: "{{risk_owner_1}}"
+  
+  contingency_plans:
+    - scenario: "{{contingency_scenario_1}}"
+      response: "{{contingency_response_1}}"
+      trigger: "{{contingency_trigger_1}}"
+
+# === 度量指标 ===
+metrics:
+  efficiency:
+    - name: "{{efficiency_metric_1}}"
+      target: "{{efficiency_target_1}}"
+      measurement: "{{efficiency_measurement_1}}"
+  
+  quality:
+    - name: "{{quality_metric_1}}"
+      target: "{{quality_target_1}}"
+      measurement: "{{quality_measurement_1}}"
+  
+  collaboration:
+    - name: "{{collaboration_metric_1}}"
+      target: "{{collaboration_target_1}}"
+      measurement: "{{collaboration_measurement_1}}"
+
+# === 持续改进 ===
+continuous_improvement:
+  feedback_collection:
+    - method: "{{feedback_method_1}}"
+      frequency: "{{feedback_frequency_1}}"
+      participants: ["{{feedback_participant_1}}"]
+  
+  improvement_triggers:
+    - condition: "{{improvement_condition_1}}"
+      action: "{{improvement_action_1}}"
+  
+  retrospective_schedule:
+    frequency: "{{retrospective_frequency}}"
+    participants: ["{{retrospective_participant_1}}"]
+    focus_areas: ["{{focus_area_1}}", "{{focus_area_2}}"]
+
+# === 工具和资源 ===
+tools_and_resources:
+  required_tools:
+    - "{{required_tool_1}}"
+    - "{{required_tool_2}}"
+  
+  optional_tools:
+    - "{{optional_tool_1}}"
+    - "{{optional_tool_2}}"
+  
+  reference_materials:
+    - "{{reference_material_1}}"
+    - "{{reference_material_2}}"
+
+# === 变更管理 ===
+change_management:
+  change_approval_process:
+    - level: "{{change_level_1}}" # minor | major | critical
+      approver: "{{change_approver_1}}"
+      criteria: "{{change_criteria_1}}"
+  
+  version_control:
+    versioning_scheme: "{{versioning_scheme}}"
+    change_log_location: "{{change_log_location}}"
+  
+  communication_plan:
+    - stakeholder: "{{stakeholder_1}}"
+      method: "{{communication_method_1}}"
+      frequency: "{{communication_frequency_1}}"

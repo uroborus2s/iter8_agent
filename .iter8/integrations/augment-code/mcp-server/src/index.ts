@@ -78,7 +78,7 @@ const ITER8_ROLES: Record<string, Iter8Role> = {
     title: "产品负责人·封神榜主持者",
     layer: "business_value",
     level: 1,
-    icon: "📋",
+    icon: "🎯",
     mythological_title: "封神榜主持者",
     professional_title: "产品负责人·业务价值守护者",
     capabilities: [
@@ -391,31 +391,36 @@ class Iter8MCPServer {
     });
 
     // 处理工具调用
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      const { name, arguments: args } = request.params;
+    this.server.setRequestHandler(
+      CallToolRequestSchema,
+      async (request: any) => {
+        const { name, arguments: args } = request.params;
 
-      try {
-        switch (name) {
-          case "activate_role":
-            return await this.activateRole(args);
-          case "start_workflow":
-            return await this.startWorkflow(args);
-          case "generate_template":
-            return await this.generateTemplate(args);
-          case "get_project_context":
-            return await this.getProjectContext(args);
-          case "facilitate_collaboration":
-            return await this.facilitateCollaboration(args);
-          default:
-            throw new McpError(ErrorCode.MethodNotFound, `未知工具: ${name}`);
+        try {
+          switch (name) {
+            case "activate_role":
+              return await this.activateRole(args);
+            case "start_workflow":
+              return await this.startWorkflow(args);
+            case "generate_template":
+              return await this.generateTemplate(args);
+            case "get_project_context":
+              return await this.getProjectContext(args);
+            case "facilitate_collaboration":
+              return await this.facilitateCollaboration(args);
+            default:
+              throw new McpError(ErrorCode.MethodNotFound, `未知工具: ${name}`);
+          }
+        } catch (error) {
+          throw new McpError(
+            ErrorCode.InternalError,
+            `工具执行失败: ${
+              error instanceof Error ? error.message : "未知错误"
+            }`
+          );
         }
-      } catch (error) {
-        throw new McpError(
-          ErrorCode.InternalError,
-          `工具执行失败: ${error instanceof Error ? error.message : "未知错误"}`
-        );
       }
-    });
+    );
   }
 
   // 激活角色
@@ -680,8 +685,8 @@ class Iter8MCPServer {
       const iter8Files = await fs.readdir(iter8WorkflowsPath);
       workflows.push(
         ...iter8Files
-          .filter((f) => f.endsWith(".yml"))
-          .map((f) => f.replace(".yml", ""))
+          .filter((f: string) => f.endsWith(".yml"))
+          .map((f: string) => f.replace(".yml", ""))
       );
     } catch (error) {
       // 目录不存在，忽略

@@ -1,0 +1,365 @@
+# iter8 质量保证工作流
+
+workflow:
+  id: quality-assurance
+  name: 质量保证工作流
+  description: >-
+    由杨戬(QA工程师)主导的全面质量保证工作流，涵盖测试策略制定、
+    测试执行、缺陷管理和质量度量的完整质量保证流程。
+  version: "2.1"
+  created_date: "2025-01-08"
+  type: implementation
+  team: implementation-layer
+  project_types:
+    - feature-development
+    - system-integration
+    - performance-optimization
+    - security-enhancement
+  
+  # 前置条件
+  prerequisites:
+    documents:
+      - "docs/system-architecture.md"
+      - "docs/api-specification.md"
+      - "docs/user-stories/"
+    conditions:
+      - "开发环境搭建完成"
+      - "代码结构设计确定"
+    quality_gates:
+      - "technical_design_approved"
+
+# === 工作流执行序列 ===
+sequence:
+  - step: test_strategy_design
+    name: "测试策略设计"
+    agent: qa
+    action: 制定全面的测试策略
+    
+    inputs:
+      required:
+        - "docs/system-architecture.md"
+        - "docs/api-specification.md"
+        - "docs/user-stories/"
+      optional:
+        - "performance-requirements.md"
+        - "security-requirements.md"
+    
+    outputs:
+      creates:
+        - "docs/test-strategy.md"
+        - "docs/test-plan.md"
+    
+    uses:
+      templates:
+        - "test-strategy-tmpl"
+        - "test-plan-tmpl"
+    
+    collaborates_with:
+      - agent: "dev"
+        interaction_type: "sync"
+        frequency: "daily"
+    
+    quality_criteria:
+      - "测试覆盖率目标明确(>80%)"
+      - "测试类型完整(单元/集成/端到端)"
+      - "测试环境需求清晰"
+      - "自动化测试策略明确"
+    
+    completion_criteria:
+      - "测试策略文档完整"
+      - "开发团队确认测试方案"
+      - "测试环境需求明确"
+    
+    validation:
+      method: "peer_review"
+      validator: "dev"
+      criteria: "测试策略的可行性和完整性"
+    
+    estimated_duration: "1-2工作日"
+    notes: "杨戬设计全面的测试策略，包括单元、集成、端到端测试，与哪吒协作确保可测试性。"
+
+  - step: test_case_design
+    name: "测试用例设计"
+    agent: qa
+    action: 设计详细的测试用例
+    
+    inputs:
+      required:
+        - "docs/test-strategy.md"
+        - "docs/user-stories/"
+      optional:
+        - "acceptance-criteria.md"
+    
+    outputs:
+      creates:
+        - "tests/test-cases/"
+        - "tests/test-data/"
+    
+    quality_criteria:
+      - "测试用例覆盖所有用户故事"
+      - "边界条件和异常情况考虑完整"
+      - "测试数据准备充分"
+    
+    completion_criteria:
+      - "测试用例设计完成"
+      - "测试数据准备就绪"
+    
+    estimated_duration: "2-3工作日"
+    notes: "基于用户故事和验收标准设计详细的测试用例。"
+
+  - step: automated_test_framework
+    name: "自动化测试框架搭建"
+    agent: qa
+    action: 搭建自动化测试框架
+    
+    inputs:
+      required:
+        - "docs/test-strategy.md"
+        - "docs/technology-stack.md"
+    
+    outputs:
+      creates:
+        - "tests/automation-framework/"
+        - "tests/config/"
+    
+    collaborates_with:
+      - agent: "dev"
+        interaction_type: "sync"
+        frequency: "daily"
+    
+    quality_criteria:
+      - "测试框架支持多种测试类型"
+      - "CI/CD集成配置完成"
+      - "测试报告生成自动化"
+    
+    completion_criteria:
+      - "自动化框架搭建完成"
+      - "示例测试用例运行成功"
+    
+    estimated_duration: "2-3工作日"
+    notes: "杨戬搭建自动化测试框架，哪吒协助技术集成。"
+
+  - step: unit_testing
+    name: "单元测试执行"
+    agent: qa
+    action: 执行单元测试
+    
+    inputs:
+      required:
+        - "src/"
+        - "tests/test-cases/"
+    
+    outputs:
+      creates:
+        - "reports/unit-test-results.md"
+        - "reports/coverage-report.md"
+    
+    quality_criteria:
+      - "单元测试覆盖率 > 80%"
+      - "所有关键功能有测试覆盖"
+      - "测试结果清晰可追踪"
+    
+    completion_criteria:
+      - "单元测试全部通过"
+      - "覆盖率达到目标"
+    
+    estimated_duration: "持续进行"
+    notes: "与开发过程并行进行的单元测试。"
+
+  - step: integration_testing
+    name: "集成测试执行"
+    agent: qa
+    action: 执行集成测试
+    
+    inputs:
+      required:
+        - "src/"
+        - "docs/api-specification.md"
+        - "tests/integration-cases/"
+    
+    outputs:
+      creates:
+        - "reports/integration-test-results.md"
+        - "reports/api-test-results.md"
+    
+    quality_criteria:
+      - "所有API接口测试通过"
+      - "系统间集成正常"
+      - "数据流验证完整"
+    
+    completion_criteria:
+      - "集成测试全部通过"
+      - "接口兼容性验证完成"
+    
+    estimated_duration: "1-2工作日"
+    notes: "验证系统各组件间的集成和API接口。"
+
+  - step: performance_testing
+    name: "性能测试执行"
+    agent: qa
+    action: 执行性能测试
+    
+    inputs:
+      required:
+        - "src/"
+        - "docs/performance-plan.md"
+      optional:
+        - "performance-test-scenarios.md"
+    
+    outputs:
+      creates:
+        - "reports/performance-test-results.md"
+        - "reports/performance-metrics.md"
+    
+    quality_criteria:
+      - "响应时间满足要求"
+      - "并发处理能力达标"
+      - "资源使用率合理"
+    
+    completion_criteria:
+      - "性能指标达到目标"
+      - "性能瓶颈识别和解决"
+    
+    estimated_duration: "1-2工作日"
+    notes: "验证系统性能指标是否满足要求。"
+
+  - step: security_testing
+    name: "安全测试执行"
+    agent: qa
+    action: 执行安全测试
+    
+    inputs:
+      required:
+        - "src/"
+        - "docs/security-architecture.md"
+    
+    outputs:
+      creates:
+        - "reports/security-test-results.md"
+        - "reports/vulnerability-assessment.md"
+    
+    quality_criteria:
+      - "无高危安全漏洞"
+      - "认证授权机制正常"
+      - "数据保护措施有效"
+    
+    completion_criteria:
+      - "安全测试全部通过"
+      - "安全风险评估完成"
+    
+    estimated_duration: "1-2工作日"
+    notes: "验证系统安全性，确保无安全漏洞。"
+
+  - step: user_acceptance_testing
+    name: "用户验收测试"
+    agent: qa
+    action: 协助用户验收测试
+    
+    inputs:
+      required:
+        - "docs/user-stories/"
+        - "tests/acceptance-criteria/"
+    
+    outputs:
+      creates:
+        - "reports/uat-results.md"
+        - "reports/user-feedback.md"
+    
+    collaborates_with:
+      - agent: "po"
+        interaction_type: "sync"
+        frequency: "per_milestone"
+      - agent: "ux-expert"
+        interaction_type: "sync"
+        frequency: "per_milestone"
+    
+    quality_criteria:
+      - "所有用户故事验收通过"
+      - "用户体验满足预期"
+      - "业务价值得到验证"
+    
+    completion_criteria:
+      - "用户验收测试通过"
+      - "用户反馈收集完成"
+    
+    estimated_duration: "1-2工作日"
+    notes: "协助业务价值层进行用户验收测试。"
+
+  - step: defect_management
+    name: "缺陷管理和跟踪"
+    agent: qa
+    action: 管理和跟踪缺陷
+    
+    inputs:
+      required:
+        - "所有测试结果"
+    
+    outputs:
+      creates:
+        - "reports/defect-report.md"
+        - "reports/quality-metrics.md"
+    
+    quality_criteria:
+      - "缺陷分类准确"
+      - "修复优先级合理"
+      - "缺陷状态跟踪完整"
+    
+    completion_criteria:
+      - "所有阻塞性缺陷修复"
+      - "质量度量报告完成"
+    
+    estimated_duration: "持续进行"
+    notes: "持续的缺陷管理和质量跟踪。"
+
+# === 工作流输出 ===
+outputs:
+  primary:
+    - "docs/test-strategy.md"
+    - "reports/test-results-summary.md"
+    - "reports/quality-metrics.md"
+  secondary:
+    - "tests/automation-framework/"
+    - "reports/coverage-report.md"
+    - "reports/defect-report.md"
+  metrics:
+    - "测试覆盖率"
+    - "缺陷发现率"
+    - "测试执行效率"
+
+# === 交接机制 ===
+handoff:
+  to:
+    - workflow: "deployment-release"
+      team: "process-coordination-layer"
+      trigger_condition: "所有质量门禁通过"
+      handoff_ceremony:
+        name: "质量评审会"
+        participants: ["杨戬", "哪吒", "太乙真人", "元始天尊"]
+        duration: "60分钟"
+        agenda:
+          - "质量度量报告评审"
+          - "缺陷状态确认"
+          - "发布就绪性评估"
+        deliverables:
+          - "质量评估报告"
+          - "发布批准书"
+  
+  from:
+    - workflow: "implementation-cycle"
+      expected_inputs: ["代码实现", "技术文档", "开发环境"]
+
+# === 质量门禁 ===
+quality_gates:
+  entry_criteria:
+    - name: "测试准备就绪"
+      description: "代码实现基本完成，测试环境可用"
+      validation_method: "environment_check"
+  
+  exit_criteria:
+    - name: "质量标准达成"
+      description: "所有质量指标达到预定目标"
+      validation_method: "metrics_review"
+    
+    - name: "发布就绪"
+      description: "系统可以安全发布到生产环境"
+      validation_method: "comprehensive_review"

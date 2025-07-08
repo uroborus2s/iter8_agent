@@ -4,6 +4,8 @@ workflow:
   description: >-
     PO姜尚和UX专家嫦娥协作完成业务价值层文档编写的标准工作流。
     从项目简介到用户故事的完整文档链，确保业务需求准确传递到技术设计层。
+  version: "2.1"
+  created_date: "2025-01-08"
   type: business-value
   team: business-value-layer
   project_types:
@@ -12,20 +14,93 @@ workflow:
     - product-planning
     - business-requirement
 
+  # 前置条件
+  prerequisites:
+    documents: []
+    conditions:
+      - "项目启动批准"
+      - "初步业务目标确定"
+    quality_gates: []
+
   sequence:
     - step: requirement_gathering
+      name: "需求收集和项目简介创建"
       agent: po
       action: 需求收集和分析
-      creates: project-brief.md
-      uses: project-brief-tmpl
-      notes: "姜尚(姜子牙)负责收集业务需求，创建项目简介，明确产品目标和用户群体。"
+
+      inputs:
+        required:
+          - "业务目标描述"
+          - "目标用户群体信息"
+        optional:
+          - "竞品分析资料"
+          - "市场调研数据"
+
+      outputs:
+        creates:
+          - "docs/project-brief.md"
+
+      uses:
+        templates:
+          - "project-brief-tmpl"
+
+      quality_criteria:
+        - "业务目标明确且可衡量"
+        - "目标用户群体清晰定义"
+        - "成功指标具体可量化"
+
+      completion_criteria:
+        - "项目简介文档完整"
+        - "利益相关者确认业务目标"
+
+      validation:
+        method: "stakeholder_review"
+        validator: "po"
+        criteria: "业务目标清晰度和可行性"
+
+      estimated_duration: "1-2工作日"
+      notes: "姜尚负责收集业务需求，创建项目简介，明确产品目标和用户群体。"
 
     - step: user_research
+      name: "用户研究和体验洞察"
       agent: ux-expert
       action: 用户研究和体验设计
-      collaborates_with: po
-      creates: user-research-insights.md
-      uses: user-research-insights-tmpl
+
+      inputs:
+        required:
+          - "docs/project-brief.md"
+        optional:
+          - "现有用户数据"
+          - "用户反馈记录"
+
+      outputs:
+        creates:
+          - "docs/user-research-insights.md"
+
+      uses:
+        templates:
+          - "user-research-insights-tmpl"
+
+      collaborates_with:
+        - agent: "po"
+          interaction_type: "sync"
+          frequency: "daily"
+
+      quality_criteria:
+        - "用户画像基于真实数据"
+        - "用户旅程完整清晰"
+        - "痛点和需求明确识别"
+
+      completion_criteria:
+        - "用户研究文档完整"
+        - "产品负责人确认用户洞察"
+
+      validation:
+        method: "peer_review"
+        validator: "po"
+        criteria: "用户洞察的准确性和可操作性"
+
+      estimated_duration: "2-3工作日"
       notes: "嫦娥进行用户研究，提供用户画像、用户旅程和体验洞察，与姜尚协作完善用户理解。"
 
     - step: prd_creation
@@ -110,12 +185,95 @@ workflow:
         
         参考: 技术设计层工作流程
 
+# === 交接机制 ===
+  handoff:
+    to:
+      - workflow: "technical-design"
+        team: "technical-design-layer"
+        trigger_condition: "所有业务价值层文档完成并验证通过"
+        handoff_ceremony:
+          name: "PRD评审会"
+          participants: ["姜尚", "嫦娥", "鲁班", "文殊菩萨"]
+          duration: "90分钟"
+          agenda:
+            - "PRD文档完整性检查"
+            - "用户故事验收标准确认"
+            - "UX设计规格说明"
+            - "技术约束和非功能需求澄清"
+            - "实现优先级和时间估算"
+          deliverables:
+            - "完整的业务需求文档包"
+            - "技术设计任务清单"
+            - "质量标准确认书"
+
+    from: []
+
+  # === 质量门禁 ===
+  quality_gates:
+    entry_criteria:
+      - name: "项目启动就绪"
+        description: "项目获得批准，初步业务目标确定"
+        validation_method: "stakeholder_approval"
+
+    milestone_gates:
+      - milestone: "需求收集完成"
+        criteria:
+          - "项目简介文档完整"
+          - "业务目标明确可衡量"
+          - "目标用户群体清晰"
+        validation_method: "document_review"
+
+      - milestone: "用户研究完成"
+        criteria:
+          - "用户画像基于真实数据"
+          - "用户旅程完整清晰"
+          - "用户需求和痛点明确"
+        validation_method: "peer_review"
+
+      - milestone: "PRD创建完成"
+        criteria:
+          - "功能需求完整详细"
+          - "非功能需求明确"
+          - "验收标准具体可测"
+        validation_method: "stakeholder_review"
+
+    exit_criteria:
+      - name: "业务价值层文档完整"
+        description: "所有必需文档创建完成并通过验证"
+        validation_method: "comprehensive_review"
+
+      - name: "技术移交就绪"
+        description: "技术设计层能够基于文档开始工作"
+        validation_method: "handoff_ceremony"
+
   collaboration_patterns:
-    po_ux_collaboration:
-      frequency: 每个文档创建阶段都协作
-      communication: 实时协作和异步审查相结合
-      decision_making: PO姜尚为业务决策最终责任人，UX嫦娥为体验决策专家
-      conflict_resolution: 优先用户价值，平衡业务目标和用户体验
+    po_ux_daily_sync:
+      participants: ["姜尚", "嫦娥"]
+      frequency: "daily"
+      duration: "15分钟"
+      format: "sync"
+      purpose: "进度同步和问题解决"
+      agenda:
+        - "昨日完成工作回顾"
+        - "今日工作计划"
+        - "阻塞问题讨论"
+      outcomes:
+        - "工作进度对齐"
+        - "问题解决方案"
+
+    collaborative_document_creation:
+      participants: ["姜尚", "嫦娥"]
+      frequency: "per_milestone"
+      duration: "60-120分钟"
+      format: "sync"
+      purpose: "协作创建关键文档"
+      agenda:
+        - "需求澄清和确认"
+        - "用户体验要求讨论"
+        - "文档内容协作编写"
+      outcomes:
+        - "高质量的协作文档"
+        - "业务和用户价值对齐"
 
   flow_diagram: |
     ```mermaid
@@ -159,32 +317,38 @@ workflow:
     collaboration_needed: "发现问题需要协作解决: [具体问题描述]"
     technical_handoff: "业务价值层文档完成，移交给技术设计层(鲁班+文殊菩萨)进行系统设计。"
 
-  quality_gates:
-    business_completeness:
-      - 项目目标明确
-      - 用户群体清晰
-      - 业务价值可衡量
-      - MVP范围合理
-    
-    user_experience_quality:
-      - 用户研究充分
-      - 用户旅程清晰
-      - 体验目标明确
-      - 可用性标准具体
-    
-    documentation_standards:
-      - 所有模版字段完整
-      - 业务技术边界清晰
-      - 验收标准明确
-      - 依赖关系识别
-
+# === 度量指标 ===
   metrics:
     efficiency:
-      - 文档创建时间
-      - 协作轮次
-      - 修正次数
-    
+      - name: "文档创建时间"
+        target: "< 5工作日"
+        measurement: "从开始到完成的实际时间"
+      - name: "协作轮次"
+        target: "< 3轮修正"
+        measurement: "文档修正和确认的轮次"
+
     quality:
-      - 验收标准覆盖率
-      - 用户价值清晰度
-      - 技术移交顺畅度 
+      - name: "验收标准覆盖率"
+        target: "> 95%"
+        measurement: "有明确验收标准的用户故事比例"
+      - name: "用户价值清晰度"
+        target: "> 4.5/5.0"
+        measurement: "技术团队对用户价值理解的评分"
+      - name: "技术移交顺畅度"
+        target: "> 90%"
+        measurement: "技术团队能够直接开始工作的比例"
+
+# === 成功标准 ===
+  success_criteria:
+    functional:
+      - "所有必需文档创建完成"
+      - "用户故事具备明确验收标准"
+      - "业务价值和用户价值清晰定义"
+    quality:
+      - "文档内容准确完整"
+      - "业务和技术边界清晰"
+      - "用户体验要求具体可实现"
+    business:
+      - "业务目标与用户需求对齐"
+      - "MVP范围合理可行"
+      - "投资回报预期明确"
