@@ -1,0 +1,529 @@
+workflow:
+  id: deep-product-research
+  name: 深度产品调研协作流程
+  description: >-
+    基于RIPER-5多维思维协议的深度产品调研流程。
+    运用系统性、辩证性、创新性、批判性思维原则，
+    全面收集用户想法，深度分析需求，完善项目规划。
+  version: "0.0.1"
+  created_date: "2025-01-10"
+  type: deep-research
+  team: business-value-layer
+  project_types:
+    - greenfield-project
+    - feature-enhancement
+    - product-innovation
+    - market-research
+    - user-research
+
+  # 前置条件
+  prerequisites:
+    documents: []
+    conditions:
+      - "项目初步概念确定"
+      - "基本业务目标明确"
+    quality_gates: []
+
+  # 多维思维模式定义
+  thinking_modes:
+    research:
+      name: "RESEARCH - 深度信息收集"
+      principles: ["系统性思维", "全面性分析"]
+      allowed: ["信息收集", "需求挖掘", "约束识别", "现状分析"]
+      forbidden: ["方案推荐", "解决方案设计", "具体规划"]
+      
+    innovate:
+      name: "INNOVATE - 创新方案探索"
+      principles: ["创新思维", "辩证思维"]
+      allowed: ["多方案探索", "创新机会识别", "利弊分析", "可行性评估"]
+      forbidden: ["具体规划", "实施细节", "最终决策"]
+      
+    plan:
+      name: "PLAN - 详细规划制定"
+      principles: ["系统性思维", "批判思维"]
+      allowed: ["详细规划", "具体方案", "实施路径", "资源配置"]
+      forbidden: ["实施执行", "方案修改"]
+
+  sequence:
+    - step: interactive_info_collection
+      name: "[RESEARCH模式] 交互式信息收集"
+      agent: po
+      thinking_mode: research
+      action: 通过一问一答方式收集完整项目信息
+
+      interaction_mode: "question_answer"
+      collection_method: "interactive_dialogue"
+
+      inputs:
+        required: []
+        optional: []
+
+      outputs:
+        creates: []  # 不直接创建文档，先收集信息
+
+      collection_phases:
+        - phase: "basic_project_info"
+          questions:
+            - "请告诉我您的项目名称是什么？"
+            - "您希望这个项目解决什么核心问题？"
+            - "您的目标用户群体是谁？"
+            - "您期望的项目上线时间是什么时候？"
+            - "您的团队规模和预算范围大概是多少？"
+
+        - phase: "detailed_requirements"
+          questions:
+            - "请详细描述您期望的核心功能有哪些？"
+            - "用户在使用过程中可能遇到什么痛点？"
+            - "您希望通过这个项目达到什么商业目标？"
+            - "有哪些技术约束或限制需要考虑？"
+            - "您的竞争对手是谁？他们有什么优缺点？"
+
+        - phase: "user_insights"
+          questions:
+            - "您的用户通常在什么场景下会使用这个产品？"
+            - "用户最看重的是什么？性能、易用性还是功能丰富度？"
+            - "用户目前是如何解决这个问题的？"
+            - "您希望用户使用产品后有什么感受？"
+
+      quality_criteria:
+        - "所有关键信息通过对话收集"
+        - "信息收集完整无遗漏"
+        - "用户回答记录准确"
+
+      completion_criteria:
+        - "所有必要信息收集完成"
+        - "信息验证确认无误"
+        - "准备创建文档"
+
+      validation:
+        method: "information_completeness_check"
+        validator: "po"
+        criteria: "信息收集的完整性和准确性"
+
+      estimated_duration: "0.5-1工作日"
+      notes: "通过系统性问答收集所有必要的项目信息，绝不预填任何内容。"
+
+    - step: document_creation_after_collection
+      name: "[RESEARCH模式] 基于收集信息创建文档"
+      agent: po
+      thinking_mode: research
+      action: 基于交互收集的信息创建调研文档
+
+      prerequisite: "interactive_info_collection完成"
+
+      inputs:
+        required:
+          - "交互式收集的完整项目信息"
+        optional: []
+
+      outputs:
+        creates:
+          - "docs/user-insights-analysis.md"
+
+      uses:
+        templates:
+          - "user-insights-collection-tmpl"
+
+      document_requirements:
+        - "文档中不得包含任何AI角色名称"
+        - "所有人员信息使用真实姓名或留空"
+        - "基于用户提供的真实信息创建"
+        - "时间信息使用当前真实日期"
+
+      quality_criteria:
+        - "文档内容完全基于用户提供信息"
+        - "无AI角色信息污染"
+        - "信息组织清晰系统"
+        - "多维度分析完整"
+
+      completion_criteria:
+        - "调研文档创建完成"
+        - "信息准确无误"
+        - "格式规范专业"
+
+      validation:
+        method: "document_purity_check"
+        validator: "po"
+        criteria: "文档纯净性和信息准确性"
+
+      estimated_duration: "0.5工作日"
+      notes: "严格基于用户提供的信息创建文档，确保文档纯净性。"
+
+    - step: requirement_analysis
+      name: "[RESEARCH模式] 需求深度分析"
+      agent: po
+      thinking_mode: research
+      action: 运用多维思维深度分析需求
+
+      inputs:
+        required:
+          - "docs/user-insights-raw.md"
+        optional:
+          - "市场调研数据"
+          - "技术约束信息"
+
+      outputs:
+        creates:
+          - "docs/requirement-analysis.md"
+
+      collaborates_with:
+        - agent: "ux-expert"
+          interaction_type: "sync"
+          frequency: "daily"
+
+      quality_criteria:
+        - "系统性需求分类"
+        - "需求优先级初步评估"
+        - "约束条件全面识别"
+        - "创新机会初步识别"
+
+      completion_criteria:
+        - "需求分析报告完整"
+        - "需求关系图清晰"
+        - "约束条件明确"
+
+      validation:
+        method: "collaborative_review"
+        validator: "po"
+        criteria: "需求分析的系统性和准确性"
+
+      estimated_duration: "1工作日"
+      notes: "产品负责人与UX专家协作，运用系统性思维深度分析用户需求。"
+
+    - step: innovation_exploration
+      name: "[INNOVATE模式] 创新方案探索"
+      agent: po
+      thinking_mode: innovate
+      action: 探索创新解决方案和产品机会
+
+      inputs:
+        required:
+          - "docs/requirement-analysis.md"
+        optional:
+          - "技术趋势报告"
+          - "竞品创新分析"
+
+      outputs:
+        creates:
+          - "docs/innovation-opportunities.md"
+
+      quality_criteria:
+        - "应用创新思维突破常规"
+        - "多种解决方案探索"
+        - "创新机会识别"
+        - "差异化竞争优势分析"
+
+      completion_criteria:
+        - "创新方案清单完整"
+        - "可行性初步评估"
+        - "创新风险识别"
+
+      validation:
+        method: "innovation_review"
+        validator: "po"
+        criteria: "创新思维应用和方案可行性"
+
+      estimated_duration: "1工作日"
+      notes: "运用创新思维探索突破性解决方案，识别产品创新机会。"
+
+    - step: solution_evaluation
+      name: "[INNOVATE模式] 方案辩证评估"
+      agent: po
+      thinking_mode: innovate
+      action: 运用辩证思维评估多种方案
+
+      inputs:
+        required:
+          - "docs/innovation-opportunities.md"
+        optional:
+          - "资源约束信息"
+          - "时间线要求"
+
+      outputs:
+        creates:
+          - "docs/solution-evaluation.md"
+
+      collaborates_with:
+        - agent: "ux-expert"
+          interaction_type: "sync"
+          frequency: "per_milestone"
+
+      quality_criteria:
+        - "多方案利弊分析"
+        - "风险评估完整"
+        - "资源需求评估"
+        - "实施可行性分析"
+
+      completion_criteria:
+        - "方案评估矩阵完成"
+        - "推荐方案明确"
+        - "决策依据充分"
+
+      validation:
+        method: "dialectical_review"
+        validator: "po"
+        criteria: "辩证思维应用和评估客观性"
+
+      estimated_duration: "1工作日"
+      notes: "运用辩证思维全面评估各种解决方案的利弊得失。"
+
+    - step: detailed_planning
+      name: "[PLAN模式] 详细规划制定"
+      agent: po
+      thinking_mode: plan
+      action: 制定详细的产品规划
+
+      inputs:
+        required:
+          - "docs/solution-evaluation.md"
+        optional:
+          - "团队能力评估"
+          - "预算约束"
+
+      outputs:
+        creates:
+          - "docs/detailed-product-plan.md"
+
+      uses:
+        templates:
+          - "requirement-refinement-tmpl"
+
+      quality_criteria:
+        - "规划详细具体"
+        - "里程碑清晰"
+        - "资源配置合理"
+        - "风险缓解措施完备"
+
+      completion_criteria:
+        - "产品规划文档完整"
+        - "实施路径明确"
+        - "成功指标定义"
+
+      validation:
+        method: "systematic_planning_review"
+        validator: "po"
+        criteria: "规划的系统性和可执行性"
+
+      estimated_duration: "1-2工作日"
+      notes: "运用系统性思维制定详细的产品规划和实施路径。"
+
+    - step: critical_review
+      name: "[REVIEW模式] 批判性审查"
+      agent: po
+      thinking_mode: review
+      action: 运用批判思维全面审查调研成果
+
+      inputs:
+        required:
+          - "docs/detailed-product-plan.md"
+          - "所有前序文档"
+
+      outputs:
+        creates:
+          - "docs/critical-review-report.md"
+
+      uses:
+        checklists:
+          - "multidimensional-thinking-checklist"
+
+      quality_criteria:
+        - "批判思维应用充分"
+        - "假设验证完整"
+        - "风险识别全面"
+        - "优化建议具体"
+
+      completion_criteria:
+        - "审查报告完整"
+        - "问题识别准确"
+        - "改进建议可行"
+
+      validation:
+        method: "critical_thinking_review"
+        validator: "po"
+        criteria: "批判思维应用和审查深度"
+
+      estimated_duration: "0.5工作日"
+      notes: "运用批判思维全面审查调研成果，确保质量和可行性。"
+
+    - workflow_end:
+      action: handoff_to_documentation_workflow
+      notes: |
+        深度产品调研完成！现在可以移交给产品文档编写流程：
+        
+        1. 调研成果文档：
+           - docs/research-initiation.md (调研框架)
+           - docs/user-insights-raw.md (用户想法收集)
+           - docs/requirement-analysis.md (需求分析)
+           - docs/innovation-opportunities.md (创新机会)
+           - docs/solution-evaluation.md (方案评估)
+           - docs/detailed-product-plan.md (详细规划)
+           - docs/critical-review-report.md (批判性审查)
+        
+        2. 下一步建议：
+           - 基于调研成果创建PRD
+           - 制定用户故事和史诗
+           - 启动产品文档协作流程
+        
+        参考: product-documentation 工作流程
+
+# === 交接机制 ===
+  handoff:
+    to:
+      - workflow: "product-documentation"
+        team: "business-value-layer"
+        trigger_condition: "深度调研完成并通过批判性审查"
+        handoff_ceremony:
+          name: "深度调研成果评审会"
+          participants: ["产品负责人", "UX专家", "架构师", "QA负责人"]
+          duration: "120分钟"
+          agenda:
+            - "调研方法论回顾"
+            - "用户洞察分享"
+            - "创新机会讨论"
+            - "产品规划确认"
+            - "下一阶段工作安排"
+          deliverables:
+            - "完整的调研成果文档包"
+            - "产品规划确认书"
+            - "创新机会清单"
+
+    from: []
+
+  # === 质量门禁 ===
+  quality_gates:
+    entry_criteria:
+      - name: "调研准备就绪"
+        description: "项目基本概念和业务目标明确"
+        validation_method: "stakeholder_approval"
+
+    milestone_gates:
+      - milestone: "深度调研完成"
+        criteria:
+          - "多维思维原则应用完整"
+          - "用户洞察收集全面"
+          - "需求分析系统深入"
+        validation_method: "multidimensional_review"
+
+      - milestone: "创新探索完成"
+        criteria:
+          - "创新机会识别充分"
+          - "方案评估客观全面"
+          - "可行性分析准确"
+        validation_method: "innovation_review"
+
+    exit_criteria:
+      - name: "调研成果完整"
+        description: "所有调研文档完成并通过批判性审查"
+        validation_method: "critical_thinking_review"
+
+      - name: "产品规划就绪"
+        description: "详细产品规划制定完成，可进入文档编写阶段"
+        validation_method: "systematic_planning_review"
+
+  collaboration_patterns:
+    multidimensional_thinking_sync:
+      participants: ["产品负责人", "UX专家"]
+      frequency: "per_thinking_mode"
+      duration: "30分钟"
+      format: "sync"
+      purpose: "确保多维思维原则正确应用"
+      agenda:
+        - "当前思维模式回顾"
+        - "思维原则应用检查"
+        - "阶段成果质量验证"
+      outcomes:
+        - "思维模式应用确认"
+        - "质量标准达成"
+
+    deep_research_collaboration:
+      participants: ["产品负责人", "UX专家"]
+      frequency: "daily"
+      duration: "45分钟"
+      format: "sync"
+      purpose: "深度调研协作和洞察分享"
+      agenda:
+        - "用户洞察分享"
+        - "需求分析讨论"
+        - "创新机会探索"
+      outcomes:
+        - "调研洞察整合"
+        - "需求理解对齐"
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[开始: 深度产品调研] --> B[RESEARCH: 调研启动]
+        B --> C[RESEARCH: 用户想法收集]
+        C --> D[RESEARCH: 需求深度分析]
+        D --> E[INNOVATE: 创新方案探索]
+        E --> F[INNOVATE: 方案辩证评估]
+        F --> G[PLAN: 详细规划制定]
+        G --> H[REVIEW: 批判性审查]
+        H --> I{审查通过?}
+        I -->|是| J[移交产品文档流程]
+        I -->|否| K[返回相应阶段优化]
+        K --> B
+
+        style J fill:#90EE90
+        style B fill:#FFE4B5
+        style C fill:#FFE4B5
+        style D fill:#FFE4B5
+        style E fill:#FFA07A
+        style F fill:#FFA07A
+        style G fill:#87CEEB
+        style H fill:#DDA0DD
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - 新产品或重大功能开发前
+      - 需要深度用户需求分析
+      - 创新机会探索项目
+      - 复杂业务需求项目
+      - 用户反馈较多需要系统整理
+
+  thinking_mode_prompts:
+    research_start: "[RESEARCH模式] 开始深度信息收集，运用系统性思维全面分析。"
+    innovate_start: "[INNOVATE模式] 开始创新方案探索，运用创新思维和辩证思维。"
+    plan_start: "[PLAN模式] 开始详细规划制定，运用系统性思维和批判思维。"
+    review_start: "[REVIEW模式] 开始批判性审查，验证所有成果质量。"
+    mode_transition: "思维模式转换: 从 [当前模式] 转换到 [目标模式]"
+    collaboration_needed: "需要协作解决: [具体问题描述]"
+    quality_check: "质量检查: 当前阶段是否满足多维思维原则要求？"
+
+# === 度量指标 ===
+  metrics:
+    thinking_quality:
+      - name: "多维思维应用完整性"
+        target: "> 95%"
+        measurement: "四个思维原则应用覆盖率"
+      - name: "用户洞察深度"
+        target: "> 4.5/5.0"
+        measurement: "用户洞察的深度和全面性评分"
+      - name: "创新机会识别率"
+        target: "> 3个创新点"
+        measurement: "识别的可行创新机会数量"
+
+    efficiency:
+      - name: "调研完成时间"
+        target: "< 7工作日"
+        measurement: "从开始到完成的实际时间"
+      - name: "需求变更率"
+        target: "< 20%"
+        measurement: "后续阶段的需求变更比例"
+
+# === 成功标准 ===
+  success_criteria:
+    functional:
+      - "所有思维模式正确应用"
+      - "用户洞察收集全面深入"
+      - "创新机会识别充分"
+      - "产品规划详细可行"
+    quality:
+      - "多维思维原则贯穿全程"
+      - "调研方法科学系统"
+      - "成果文档质量高"
+    business:
+      - "用户需求理解深入"
+      - "产品创新方向明确"
+      - "商业价值清晰可衡量"

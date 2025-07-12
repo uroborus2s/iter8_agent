@@ -1,0 +1,250 @@
+project:
+  name: iter8_agent
+  version: 0.0.1
+  description: 基于封神演义8角色体系的AI敏捷开发协作框架
+  type: ai_agile_framework
+  created_date: '2025-07-08'
+  metadata:
+    repository: https://github.com/uroborus2s/iter8_agent.git
+    license: MIT
+    author: iter8 Team
+    keywords:
+      - AI
+      - Agile
+      - Collaboration
+      - Framework
+      - 封神演义
+team:
+  name: iter8敏捷团队
+  description: 基于封神演义角色的智能敏捷开发团队
+  timezone: Asia/Shanghai
+  language: zh-CN
+  architecture:
+    layers:
+      business_value:
+        name: 业务价值层
+        description: 产品策略和用户体验
+        roles:
+          - po
+          - ux-expert
+        level: 1
+      technical_design:
+        name: 技术设计层
+        description: 系统架构和业务分析
+        roles:
+          - architect
+          - analyst
+        level: 2
+      implementation:
+        name: 实现层
+        description: 代码开发和质量保证
+        roles:
+          - dev
+          - qa
+        level: 3
+      process_coordination:
+        name: 流程协调层
+        description: 敏捷教练和团队协调
+        roles:
+          - master
+          - orchestrator
+        level: 4
+roles:
+  base_path: .iter8/agents
+  definition_path: .iter8/teams/role-definitions
+  activation:
+    auto_load_context: true
+    context_timeout: 300
+    max_context_size: 10000
+    cache_enabled: true
+    cache_ttl: 3600
+  available_roles:
+    po:
+      file: po.prompt.md
+      config: po.yml
+      enabled: true
+      priority: 1
+    ux-expert:
+      file: ux-expert.prompt.md
+      config: ux-expert.yml
+      enabled: true
+      priority: 2
+    architect:
+      file: architect.prompt.md
+      config: architect.yml
+      enabled: true
+      priority: 3
+    analyst:
+      file: analyst.prompt.md
+      config: analyst.yml
+      enabled: true
+      priority: 4
+    dev:
+      file: dev.prompt.md
+      config: dev.yml
+      enabled: true
+      priority: 5
+    qa:
+      file: qa.prompt.md
+      config: qa.yml
+      enabled: true
+      priority: 6
+    master:
+      file: master.prompt.md
+      config: master.yml
+      enabled: true
+      priority: 7
+    orchestrator:
+      file: orchestrator.prompt.md
+      config: orchestrator.yml
+      enabled: true
+      priority: 8
+workflows:
+  base_path: .iter8/workflows
+  settings:
+    auto_save: true
+    save_interval: 300
+    max_execution_time: 7200
+    retry_attempts: 3
+    retry_delay: 1000
+  available_workflows:
+    - product-documentation
+    - epic-story-breakdown
+    - technical-design
+    - implementation-cycle
+    - quality-assurance
+    - user-research-insights
+templates:
+  base_path: .iter8/templates
+  settings:
+    auto_format: true
+    variable_validation: true
+    backup_enabled: true
+    version_control: true
+  types:
+    documents:
+      - prd-tmpl
+      - epic-tmpl
+      - story-tmpl
+      - architecture-tmpl
+    specifications:
+      - api-spec-tmpl
+      - ux-spec-tmpl
+      - test-plan-tmpl
+    reports:
+      - status-report-tmpl
+      - quality-report-tmpl
+documentation:
+  base_path: docs
+  structure:
+    overview: docs/overview
+    guides: docs/guides
+    api: docs/api
+    examples: docs/examples
+    troubleshooting: docs/troubleshooting
+  settings:
+    auto_generate_toc: true
+    auto_update_links: true
+    format: markdown
+    encoding: utf-8
+integrations:
+  mcp_server:
+    enabled: true
+    server_path: index.js
+    connection_timeout: 30000
+    retry_attempts: 3
+    name: iter8-agile-team
+    version: 0.0.1
+    description: iter8敏捷团队AI代理MCP服务器
+    environment:
+      ITER8_PROJECT_ROOT: .
+      ITER8_CONFIG_PATH: .iter8/config.yml
+      ITER8_ROLES_PATH: .iter8/agents
+      ITER8_WORKFLOWS_PATH: .iter8/workflows
+      ITER8_TEMPLATES_PATH: .iter8/templates
+      ITER8_DOCS_PATH: docs
+      NODE_ENV: production
+performance:
+  token_optimization:
+    enabled: true
+    max_tokens_per_request: 8000
+    context_compression: true
+    smart_caching: true
+    loading_strategy:
+      immediate: 100
+      relevant: 500
+      comprehensive: 2000
+  cache:
+    enabled: true
+    ttl: 3600
+    max_size: 100
+    compression: true
+  concurrency:
+    max_parallel_workflows: 3
+    max_parallel_roles: 2
+    queue_size: 10
+quality:
+  gates:
+    enabled: true
+    strict_mode: false
+    auto_validation: true
+  standards:
+    documentation_completeness: 90
+    test_coverage: 80
+    code_quality_score: 85
+    user_satisfaction: 4.5
+  metrics:
+    collection_enabled: true
+    reporting_interval: daily
+    retention_period: 30d
+security:
+  data_protection:
+    encryption_enabled: false
+    sensitive_data_masking: true
+    audit_logging: true
+  access_control:
+    role_based_permissions: true
+    session_timeout: 3600
+    max_concurrent_sessions: 5
+logging:
+  level: info
+  format: json
+  files:
+    application: .iter8/logs/application.log
+    error: .iter8/logs/error.log
+    audit: .iter8/logs/audit.log
+  rotation:
+    enabled: true
+    max_size: 10MB
+    max_files: 5
+    compress: true
+development:
+  debug:
+    enabled: false
+    verbose_logging: false
+    performance_monitoring: true
+  hot_reload:
+    enabled: true
+    watch_paths:
+      - .iter8/agents
+      - .iter8/workflows
+      - .iter8/templates
+  testing:
+    enabled: true
+    test_data_path: .iter8/test-data
+    mock_external_services: true
+backup:
+  enabled: true
+  schedule: daily
+  retention: 30d
+  include:
+    - .iter8/config.yml
+    - .iter8/agents/
+    - .iter8/workflows/
+    - .iter8/templates/
+    - docs/
+  exclude:
+    - .iter8/logs/
+    - .iter8/cache/
+    - node_modules/
+    - .git/

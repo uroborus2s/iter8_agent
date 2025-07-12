@@ -1,21 +1,37 @@
 {
-  "name": "iter8-mcp-server",
-  "version": "2.1.0",
+  "name": "iter8",
+  "version": "0.0.1",
   "description": "iter8敏捷团队AI代理MCP服务器，为Augment Code提供深度集成支持，兼容MCP 1.0+",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    ".iter8/",
+    "src/",
+    "mcp-server-config.json",
+    "augment-code-config.json",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
-    "iter8-mcp-server": "dist/index.js"
+    "iter8": "./bin/iter8.js",
+    "iter8-mcp": "index.js",
+    "iter8-version": "./bin/iter8-version.js"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "rm -rf index.js index.js.map index.d.ts",
+    "build": "pnpm run clean && tsc",
     "dev": "tsc --watch",
-    "start": "node dist/index.js",
-    "clean": "rm -rf dist",
+    "start": "node index.js",
     "lint": "eslint src/**/*.ts",
     "test": "jest",
-    "prepare": "npm run build",
-    "install-global": "npm run build && npm link"
+    "prepublishOnly": "pnpm run build && pnpm test",
+    "reinstall": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
+    "publish:dry": "npm publish --dry-run",
+    "publish:latest": "npm publish"
   },
   "keywords": [
     "iter8",
@@ -32,25 +48,30 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.0",
+    "chalk": "^5.4.1",
+    "commander": "^11.1.0",
     "js-yaml": "^4.1.0",
-    "zod": "^3.23.0"
+    "semver": "^7.7.2",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.11.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "eslint": "^8.57.0",
+    "@types/node": "^20.19.6",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
     "jest": "^29.7.0",
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
   },
+  "packageManager": "pnpm@8.15.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/your-org/iter8_agent.git",
-    "directory": ".iter8/integrations/augment-code/mcp-server"
+    "directory": "."
   },
   "bugs": {
     "url": "https://github.com/your-org/iter8_agent/issues"
@@ -59,7 +80,7 @@
   "mcp": {
     "name": "iter8-agile-team",
     "description": "iter8敏捷团队AI代理系统MCP服务器",
-    "version": "2.1.0",
+    "version": "0.0.1",
     "capabilities": {
       "tools": true,
       "resources": true,

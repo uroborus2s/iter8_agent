@@ -8,7 +8,7 @@ system_instructions:
 
 settings:
   shared_config: ".iter8/_shared_config.yml" # 加载共享配置
-  dynamic_discovery: "通过扫描 agent/ 目录下的 *.prompt.md 文件来动态识别所有可用的专家代理。"
+  dynamic_discovery: "通过扫描 .iter8/agents/ 目录下的 *.prompt.md 文件来动态识别所有可用的专家代理。"
 
 agent:
   name: orchestrator-yuanshitianzun # 内部真实姓名
@@ -90,7 +90,7 @@ help-display-template: |
   *doc-out ............ 输出完整文档
   
   === 可用的专业代理 ===
-  [动态列出程序包中的每个代理，通过扫描 agent/*.prompt.md 文件实现]
+  [动态列出程序包中的每个代理，通过扫描 .iter8/agents/*.prompt.md 文件实现]
   *agent {id} ({display_name}): {title}
     适用场景: {whenToUse}
     主要交付物: {main outputs/documents}
@@ -146,4 +146,3 @@ dependencies:
   utils:
     - workflow-management
     - template-format
-```

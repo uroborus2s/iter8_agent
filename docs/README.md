@@ -8,14 +8,14 @@
 ### 🚀 新用户入门
 - [系统概览](system-overview.md) - iter8系统的整体介绍和核心概念
 - [快速开始](quick-start.md) - 5分钟快速上手指南
-- [角色激活指南](role-activation.md) - 如何激活和使用8个AI角色
+- [业务价值层启动指南](business-value-layer-startup-guide.md) - 业务价值层快速上手
 
 ### 🎭 角色系统文档
-- [角色系统概览](roles/overview.md) - 8个封神演义角色的完整介绍
-- [业务价值层](roles/business-value-layer.md) - 姜尚(PO) + 嫦娥(UX专家)
-- [技术设计层](roles/technical-design-layer.md) - 鲁班(架构师) + 文殊菩萨(分析师)
-- [实现层](roles/implementation-layer.md) - 哪吒(开发) + 杨戬(QA)
-- [流程协调层](roles/process-coordination-layer.md) - 太乙真人(教练) + 元始天尊(协调者)
+- [角色激活系统](../.iter8/integrations/role-activation-system.yml) - 8个封神演义角色的触发机制
+- [业务价值层团队](../.iter8/teams/business-value-layer.yml) - 姜尚(PO) + 嫦娥(UX专家)
+- [技术设计层团队](../.iter8/teams/technical-design-layer.yml) - 鲁班(架构师) + 文殊菩萨(分析师)
+- [实现层团队](../.iter8/teams/implementation-layer.yml) - 哪吒(开发) + 杨戬(QA)
+- [流程协调层团队](../.iter8/teams/process-coordination-layer.yml) - 太乙真人(教练) + 元始天尊(协调者)
 
 ### 🔄 工作流文档
 - [产品文档化工作流](../.iter8/workflows/product-documentation.yml) - 业务价值层主工作流
@@ -24,9 +24,10 @@
 - [实现开发工作流](../.iter8/workflows/implementation-cycle.yml) - 开发实现流程
 
 ### 🔧 集成指南
-- [Cursor IDE集成](../.iter8/integrations/cursor-ide/.cursor-rules) - Cursor IDE深度集成
-- [Augment Code MCP服务器](../.iter8/integrations/augment-code/mcp-server/) - MCP服务器集成
-- [Gemini CLI工具](../.iter8/integrations/gemini-cli/iter8-cli.js) - 命令行工具集成
+- [MCP集成指南](mcp-integration-guide.md) - 完整的MCP服务器集成文档
+- [MCP服务器配置](../mcp-server-config.json) - 标准MCP服务器配置文件
+- [Augment Code配置](../augment-code-config.json) - Augment Code专用配置文件
+- [角色激活系统](../.iter8/integrations/role-activation-system.yml) - 角色触发和API配置
 
 ### 📝 模板系统
 - [模板系统配置](../.iter8/templates/dynamic-template-system.yml) - 动态模板系统介绍
@@ -36,13 +37,15 @@
 
 ### 🛠️ 开发者文档
 - [团队配置](../.iter8/teams/core-agile-team.yml) - 核心敏捷团队配置
-- [角色定义](../agent/) - 8个AI角色的prompt定义
+- [角色定义](../.iter8/agents/) - 8个AI角色的prompt定义
+- [项目配置](../.iter8/config.yml) - 完整的项目配置文件
 
 ### 🧪 测试文档
-- [集成测试套件](../.iter8/tests/integration-test-suite.yml) - 完整的集成测试配置
+- [测试指南](testing-guide.yml) - 完整的集成测试配置
+- [集成测试](integration-tests.yml) - AI编程工具集成测试
 
 ### 📊 运维文档
-- [部署指南](../.iter8/deployment/complete-deployment-guide.md) - 生产环境部署指南
+- [部署指南](deployment-guide.md) - 生产环境部署指南
 
 ## 🔍 按场景导航
 
@@ -58,13 +61,14 @@
 3. [角色协作指南](../agent/) - 跨角色协作
 
 ### 工具集成
-1. [Cursor IDE集成](../.iter8/integrations/cursor-ide/.cursor-rules) - 最推荐的集成方式
-2. [部署指南](../.iter8/deployment/complete-deployment-guide.md) - 完整部署流程
+1. [MCP服务器集成](../.iter8/integrations/augment-code/mcp-server/) - 统一的MCP协议集成
+2. [部署指南](deployment-guide.md) - 完整部署流程
 
 ## 📞 获取帮助
 
 ### 常见问题
-- [部署指南](../.iter8/deployment/complete-deployment-guide.md) - 包含故障排除指南
+- [部署指南](deployment-guide.md) - 包含故障排除指南
+- [测试指南](testing-guide.yml) - 功能验证和问题诊断
 
 ### 社区支持
 - GitHub Issues - 报告问题和功能请求

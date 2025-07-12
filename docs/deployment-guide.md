@@ -71,32 +71,27 @@ cat .cursor-rules | head -20
 # 在Cursor IDE中输入: @姜尚 为电商平台创建PRD
 ```
 
-### 第三步：Augment Code MCP服务器部署
+### 第三步：MCP服务器部署
 
 ```bash
-# 1. 进入MCP服务器目录
-cd .iter8/integrations/augment-code/mcp-server
+# 1. 安装依赖
+pnpm install
 
-# 2. 安装依赖
-npm install
+pnpm run build
 
-# 3. 构建服务器
-npm run build
+# 3. 配置MCP服务器
+# 使用标准配置文件
+cp mcp-server-config.json ~/.config/augment-code/
 
-# 4. 配置Augment Code
-mkdir -p ~/.config/augment-code
-cp ../augment-code-config.json ~/.config/augment-code/mcp-servers.json
+# 或使用Augment Code专用配置
+cp augment-code-config.json ~/.config/augment-code/mcp-servers.json
 
-# 5. 编辑配置文件，更新路径
-nano ~/.config/augment-code/mcp-servers.json
-# 将路径更新为实际的项目路径
+# 4. 启动MCP服务器
+pnpm run mcp:start
 
-# 6. 启动MCP服务器
-npm start
-
-# 7. 使用PM2管理服务器（推荐）
-npm install -g pm2
-pm2 start dist/index.js --name iter8-mcp-server
+# 5. 使用PM2管理服务器（推荐）
+pnpm install -g pm2
+pm2 start index.js --name iter8-mcp-server
 pm2 save
 pm2 startup
 ```

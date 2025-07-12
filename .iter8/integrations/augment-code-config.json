@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "iter8-agile-team": {
+      "command": "node",
+      "args": [".iter8/integrations/augment-code/mcp-server/dist/index.js"],
+      "env": {
+        "ITER8_PROJECT_ROOT": ".",
+        "ITER8_CONFIG_PATH": ".iter8/config.yml",
+        "ITER8_ROLES_PATH": ".iter8/agents",
+        "ITER8_WORKFLOWS_PATH": ".iter8/workflows",
+        "ITER8_TEMPLATES_PATH": ".iter8/templates",
+        "ITER8_DOCS_PATH": "docs",
+        "ITER8_ROLE_DEFINITIONS_PATH": ".iter8/teams/role-definitions",
+        "NODE_ENV": "production",
+        "DEBUG": "iter8:*"
+      },
+      "cwd": ".",
+      "timeout": 30000,
+      "retries": 3,
+      "description": "iter8敏捷团队AI代理系统 - 基于封神演义8角色的智能协作框架"
+    }
+  },
+  "mcp": {
+    "enabled": true,
+    "logLevel": "info",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "retryDelay": 1000
+  }
+}

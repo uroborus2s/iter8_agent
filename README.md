@@ -32,7 +32,7 @@ iter8敏捷团队AI代理系统是一个创新的智能敏捷开发框架，将�
 
 ### 1. 环境要求
 - Node.js >= 18.0.0
-- npm >= 9.0.0
+- pnpm >= 8.0.0
 - Git >= 2.30.0
 
 ### 2. 快速安装
@@ -45,28 +45,32 @@ cd iter8_agent
 # 设置环境变量
 export ITER8_CONFIG_PATH="$(pwd)/.iter8"
 
-# Cursor IDE集成（推荐）
-cp .iter8/integrations/cursor-ide/.cursor-rules ./
-cursor .
+# 本地安装使用（推荐）
+npm install -g iter8
+iter8 init
+iter8 start
 ```
 
 ### 3. 第一次使用
 
-在Cursor IDE中输入：
+在AI工具中使用：
 ```
 @姜尚 为我的项目创建产品需求文档
 ```
 
 或使用命令行：
 ```bash
-# 安装CLI工具
-cd .iter8/integrations/gemini-cli
-npm install -g commander chalk inquirer js-yaml
-chmod +x iter8-cli.js
-sudo ln -s $(pwd)/iter8-cli.js /usr/local/bin/iter8
+# 全局安装
+npm install -g iter8
 
-# 激活角色
-iter8 role activate po
+# 初始化项目
+iter8 init
+
+# 启动MCP服务器
+iter8 start
+
+# 检查项目状态
+iter8 status
 ```
 
 ## 🔄 核心工作流
@@ -93,20 +97,18 @@ iter8 role activate po
 
 ## 🔧 工具集成
 
-### Cursor IDE（推荐）
-- **配置**: 复制 `.cursor-rules` 到项目根目录
-- **功能**: 角色激活、上下文感知、智能建议
-- **支持**: Cursor 1.2+ 新特性（Agent Planning、Background Agent、Memories）
+### 本地MCP服务器（推荐）
+- **安装**: `npm install -g iter8`
+- **功能**: 8个AI角色、工作流管理、模板系统
+- **部署**: `iter8 start` 启动服务器
+- **配置**: `mcp-server-config.json` 完整配置文件
+- **兼容**: `augment-code-config.json` Augment Code专用配置
 
-### Augment Code
-- **实现**: MCP服务器
-- **功能**: 深度代码上下文、智能协作、工作流管理
-- **部署**: 独立MCP服务器进程
-
-### Gemini CLI
-- **工具**: iter8命令行工具
-- **功能**: 批量操作、自动化脚本、系统管理
-- **安装**: 全局CLI工具
+### CLI工具
+- **初始化**: `iter8 init` - 创建项目配置
+- **启动**: `iter8 start` - 启动MCP服务器
+- **状态**: `iter8 status` - 检查项目状态
+- **配置**: `iter8 config --tool augment-code` - 生成工具配置
 
 ## 📚 文档
 

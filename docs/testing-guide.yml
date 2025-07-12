@@ -1,0 +1,260 @@
+# iter8 集成测试套件
+# 验证iter8敏捷团队AI代理系统的完整功能
+# 版本: 2.0 | 创建日期: 2025-01-08
+
+version: "2.0"
+test_suite_name: "iter8-integration-tests"
+description: "iter8敏捷团队AI代理系统完整集成测试"
+
+# === 测试配置 ===
+test_configuration:
+  environment: "test"
+  timeout: 30000  # 30秒超时
+  retry_attempts: 3
+  parallel_execution: false
+  cleanup_after_tests: true
+  
+  test_data_setup:
+    mock_project_path: "./test-fixtures/mock-project"
+    sample_templates: "./test-fixtures/templates"
+    sample_workflows: "./test-fixtures/workflows"
+    sample_roles: "./test-fixtures/roles"
+
+# === 核心功能测试 ===
+core_functionality_tests:
+  
+  # 角色激活测试
+  role_activation_tests:
+    - test_id: "RA001"
+      name: "姜尚(产品负责人)角色激活测试"
+      description: "验证@姜尚角色能正确激活并响应产品需求"
+      trigger: "@姜尚"
+      input: "创建智能客服系统的产品需求文档"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "po"
+        - role_info.name: "姜尚"
+        - response_contains: ["产品需求", "用户故事", "业务价值"]
+      validation_criteria:
+        - "响应时间 < 5秒"
+        - "包含完整的角色信息"
+        - "提供相关的下一步建议"
+
+    - test_id: "RA002"
+      name: "嫦娥(UX专家)角色激活测试"
+      description: "验证@嫦娥角色能正确激活并响应UX设计需求"
+      trigger: "@嫦娥"
+      input: "设计用户评价功能的交互流程"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "ux-expert"
+        - role_info.name: "嫦娥"
+        - response_contains: ["用户体验", "交互设计", "可用性"]
+
+    - test_id: "RA003"
+      name: "鲁班(系统架构师)角色激活测试"
+      description: "验证@鲁班角色能正确激活并响应架构设计需求"
+      trigger: "@鲁班"
+      input: "设计微服务架构方案"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "architect"
+        - role_info.name: "鲁班"
+        - response_contains: ["系统架构", "微服务", "技术选型"]
+
+    - test_id: "RA004"
+      name: "文殊菩萨(业务分析师)角色激活测试"
+      trigger: "@文殊菩萨"
+      input: "分析电商系统的业务流程"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "analyst"
+        - role_info.name: "文殊菩萨"
+
+    - test_id: "RA005"
+      name: "哪吒(全栈开发工程师)角色激活测试"
+      trigger: "@哪吒"
+      input: "实现用户认证模块"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "dev"
+        - role_info.name: "哪吒"
+
+    - test_id: "RA006"
+      name: "杨戬(质量保证工程师)角色激活测试"
+      trigger: "@杨戬"
+      input: "设计自动化测试策略"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "qa"
+        - role_info.name: "杨戬"
+
+    - test_id: "RA007"
+      name: "太乙真人(敏捷教练)角色激活测试"
+      trigger: "@太乙真人"
+      input: "优化团队敏捷流程"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "master"
+        - role_info.name: "太乙真人"
+
+    - test_id: "RA008"
+      name: "元始天尊(团队编排器)角色激活测试"
+      trigger: "@元始天尊"
+      input: "协调团队完成项目规划"
+      expected_outputs:
+        - role_activated: true
+        - role_info.id: "orchestrator"
+        - role_info.name: "元始天尊"
+
+# === 工作流测试 ===
+workflow_tests:
+  
+  - test_id: "WF001"
+    name: "产品文档工作流测试"
+    description: "验证product-documentation工作流的完整执行"
+    workflow_id: "product-documentation"
+    input_data:
+      project_name: "测试项目"
+      project_type: "web应用"
+      target_users: "企业用户"
+    expected_steps:
+      - "需求收集"
+      - "用户研究"
+      - "产品规划"
+      - "文档生成"
+    success_criteria:
+      - "所有步骤成功执行"
+      - "生成完整的PRD文档"
+      - "包含用户故事和验收标准"
+
+  - test_id: "WF002"
+    name: "技术设计工作流测试"
+    workflow_id: "technical-design"
+    expected_steps:
+      - "需求分析"
+      - "架构设计"
+      - "技术选型"
+      - "设计文档生成"
+
+# === 模板生成测试 ===
+template_generation_tests:
+  
+  - test_id: "TG001"
+    name: "PRD模板生成测试"
+    template_type: "prd"
+    input_variables:
+      project_name: "智能客服系统"
+      author_name: "测试用户"
+      project_type: "SaaS平台"
+    expected_outputs:
+      - "包含项目名称"
+      - "包含作者真实姓名"
+      - "不包含AI角色名称"
+      - "遵循标准PRD格式"
+
+  - test_id: "TG002"
+    name: "架构文档模板生成测试"
+    template_type: "architecture"
+    expected_outputs:
+      - "包含系统架构图"
+      - "包含技术栈说明"
+      - "包含部署方案"
+
+# === 协作功能测试 ===
+collaboration_tests:
+  
+  - test_id: "CO001"
+    name: "角色间协作测试"
+    description: "验证不同角色之间的协作功能"
+    scenario:
+      from_role: "po"
+      to_role: "architect"
+      task: "基于PRD设计系统架构"
+    expected_outputs:
+      - collaboration_facilitated: true
+      - handoff_context: "包含PRD信息"
+      - next_steps: "明确的协作步骤"
+
+# === 集成测试 ===
+integration_tests:
+  
+  - test_id: "IT001"
+    name: "MCP服务器集成测试"
+    description: "验证MCP服务器与客户端的集成"
+    test_steps:
+      - "启动MCP服务器"
+      - "建立客户端连接"
+      - "执行工具调用"
+      - "验证响应格式"
+    expected_results:
+      - "服务器成功启动"
+      - "客户端成功连接"
+      - "工具调用正常响应"
+      - "响应格式符合MCP标准"
+
+# === 性能测试 ===
+performance_tests:
+  
+  - test_id: "PT001"
+    name: "角色激活性能测试"
+    description: "验证角色激活的响应时间"
+    test_parameters:
+      concurrent_requests: 10
+      test_duration: "60秒"
+    performance_criteria:
+      - "平均响应时间 < 3秒"
+      - "95%请求响应时间 < 5秒"
+      - "错误率 < 1%"
+
+# === 错误处理测试 ===
+error_handling_tests:
+  
+  - test_id: "EH001"
+    name: "无效角色触发测试"
+    description: "验证无效角色触发的错误处理"
+    input: "@无效角色"
+    expected_outputs:
+      - error_handled: true
+      - error_message: "包含可用角色列表"
+      - helpful_suggestions: true
+
+  - test_id: "EH002"
+    name: "工作流不存在测试"
+    workflow_id: "non-existent-workflow"
+    expected_outputs:
+      - error_handled: true
+      - error_message: "工作流不存在"
+      - available_workflows: "列出可用工作流"
+
+# === 测试执行配置 ===
+test_execution:
+  setup_commands:
+    - "npm install"
+    - "npm run build"
+    - "启动MCP服务器"
+  
+  teardown_commands:
+    - "停止MCP服务器"
+    - "清理测试数据"
+  
+  test_order:
+    - "core_functionality_tests"
+    - "workflow_tests"
+    - "template_generation_tests"
+    - "collaboration_tests"
+    - "integration_tests"
+    - "performance_tests"
+    - "error_handling_tests"
+
+# === 测试报告 ===
+test_reporting:
+  output_format: "json"
+  include_performance_metrics: true
+  include_coverage_report: true
+  generate_html_report: true
+  
+  success_criteria:
+    overall_pass_rate: "> 95%"
+    performance_pass_rate: "> 90%"
+    critical_tests_pass_rate: "100%"

@@ -4,7 +4,7 @@ workflow:
   description: >-
     PO姜尚和UX专家嫦娥协作完成业务价值层文档编写的标准工作流。
     从项目简介到用户故事的完整文档链，确保业务需求准确传递到技术设计层。
-  version: "2.1"
+  version: "0.0.1"
   created_date: "2025-01-08"
   type: business-value
   team: business-value-layer
@@ -23,13 +23,54 @@ workflow:
     quality_gates: []
 
   sequence:
-    - step: requirement_gathering
-      name: "需求收集和项目简介创建"
+    - step: deep_research_phase
+      name: "深度产品调研阶段"
       agent: po
-      action: 需求收集和分析
+      action: 启动深度产品调研流程
 
       inputs:
         required:
+          - "项目基本概念"
+          - "初步业务目标"
+        optional:
+          - "现有市场信息"
+          - "用户反馈数据"
+
+      outputs:
+        creates:
+          - "docs/deep-research-results/"
+
+      uses:
+        workflows:
+          - "deep-product-research"
+
+      quality_criteria:
+        - "多维思维原则应用完整"
+        - "用户洞察收集全面深入"
+        - "创新机会识别充分"
+        - "需求分析系统科学"
+
+      completion_criteria:
+        - "深度调研工作流完成"
+        - "所有调研文档生成"
+        - "批判性审查通过"
+
+      validation:
+        method: "multidimensional_review"
+        validator: "po"
+        criteria: "调研深度和多维思维应用质量"
+
+      estimated_duration: "5-7工作日"
+      notes: "产品负责人运用RIPER-5多维思维协议进行深度产品调研，系统收集用户想法并完善需求。"
+
+    - step: requirement_gathering
+      name: "需求收集和项目简介创建"
+      agent: po
+      action: 基于深度调研结果进行需求收集和分析
+
+      inputs:
+        required:
+          - "docs/deep-research-results/"
           - "业务目标描述"
           - "目标用户群体信息"
         optional:
@@ -45,21 +86,24 @@ workflow:
           - "project-brief-tmpl"
 
       quality_criteria:
+        - "基于深度调研洞察"
         - "业务目标明确且可衡量"
         - "目标用户群体清晰定义"
         - "成功指标具体可量化"
+        - "创新机会已识别"
 
       completion_criteria:
         - "项目简介文档完整"
         - "利益相关者确认业务目标"
+        - "深度调研洞察已整合"
 
       validation:
         method: "stakeholder_review"
         validator: "po"
-        criteria: "业务目标清晰度和可行性"
+        criteria: "业务目标清晰度和调研洞察整合质量"
 
       estimated_duration: "1-2工作日"
-      notes: "姜尚负责收集业务需求，创建项目简介，明确产品目标和用户群体。"
+      notes: "产品负责人基于深度调研成果收集业务需求，创建项目简介，确保洞察充分整合。"
 
     - step: user_research
       name: "用户研究和体验洞察"
@@ -101,18 +145,56 @@ workflow:
         criteria: "用户洞察的准确性和可操作性"
 
       estimated_duration: "2-3工作日"
-      notes: "嫦娥进行用户研究，提供用户画像、用户旅程和体验洞察，与姜尚协作完善用户理解。"
+      notes: "UX专家进行用户研究，提供用户画像、用户旅程和体验洞察，与产品负责人协作完善用户理解。"
 
     - step: prd_creation
+      name: "产品需求文档创建"
       agent: po
       action: 创建产品需求文档
-      creates: prd.md
-      uses: prd-tmpl
-      requires: 
-        - project-brief.md
-        - user-research-insights.md
-      collaborates_with: ux-expert
-      notes: "姜尚主导创建PRD，嫦娥提供用户体验相关需求输入。SAVE OUTPUT: 将最终prd.md保存到项目的docs/文件夹。"
+
+      inputs:
+        required:
+          - "docs/project-brief.md"
+          - "docs/user-research-insights.md"
+          - "docs/deep-research-results/"
+          - "完整的项目信息收集清单"
+        optional:
+          - "竞品分析资料"
+          - "技术约束文档"
+
+      outputs:
+        creates:
+          - "docs/prd.md"
+
+      uses:
+        templates:
+          - "prd-tmpl"
+        checklists:
+          - "project-info-collection-tmpl"
+
+      quality_criteria:
+        - "基于深度调研洞察创建"
+        - "多维思维原则应用体现"
+        - "用户想法充分整合"
+        - "创新机会明确识别"
+        - "文档不包含任何AI角色信息"
+        - "使用当前实际日期"
+        - "团队信息基于真实数据或留空"
+        - "功能需求完整详细"
+        - "验收标准具体可测"
+
+      completion_criteria:
+        - "PRD文档完整且符合模板要求"
+        - "所有变量已正确填写"
+        - "文档已保存到docs/目录"
+
+      validation:
+        method: "document_review"
+        validator: "po"
+        criteria: "文档完整性和信息准确性"
+
+      estimated_duration: "1-2工作日"
+      notes: "产品负责人基于收集的项目信息创建PRD，确保文档不包含AI角色信息且使用真实数据。SAVE OUTPUT: 将最终prd.md保存到项目的docs/文件夹。"
 
     - step: ux_specification
       agent: ux-expert
@@ -121,17 +203,17 @@ workflow:
       uses: ux-specification-tmpl
       requires: prd.md
       collaborates_with: po
-      notes: "嫦娥基于PRD创建详细的用户体验规格，姜尚审核确保符合业务目标。"
+      notes: "UX专家基于PRD创建详细的用户体验规格，产品负责人审核确保符合业务目标。"
 
     - step: epic_planning
       agent: po
       action: 史诗规划和分解
       creates: epic-*.md
       uses: epic-tmpl
-      requires: 
+      requires:
         - prd.md
         - ux-specification.md
-      notes: "姜尚将业务需求分解为史诗，明确MVP范围和业务价值。SAVE OUTPUT: 将史诗文档保存到docs/epics/文件夹。"
+      notes: "产品负责人将业务需求分解为史诗，明确MVP范围和业务价值。SAVE OUTPUT: 将史诗文档保存到docs/epics/文件夹。"
 
     - step: story_creation
       agent: po
@@ -140,26 +222,26 @@ workflow:
       uses: story-tmpl
       requires: epic-*.md
       collaborates_with: ux-expert
-      notes: "姜尚创建详细用户故事，嫦娥提供用户体验验收标准输入。SAVE OUTPUT: 将故事文档保存到docs/stories/文件夹。"
+      notes: "产品负责人创建详细用户故事，UX专家提供用户体验验收标准输入。SAVE OUTPUT: 将故事文档保存到docs/stories/文件夹。"
 
     - step: business_validation
       agent: po
       action: 业务价值验证
       validates: all_business_artifacts
       uses: po-master-checklist
-      notes: "姜尚验证所有业务文档的完整性、一致性和业务价值对齐。"
+      notes: "产品负责人验证所有业务文档的完整性、一致性和业务价值对齐。"
 
     - step: ux_validation
       agent: ux-expert
       action: 用户体验验证
       validates: user_experience_aspects
-      notes: "嫦娥验证所有文档中的用户体验要求是否可实现且用户友好。"
+      notes: "UX专家验证所有文档中的用户体验要求是否可实现且用户友好。"
 
     - step: collaborative_review
       agents: [po, ux-expert]
       action: 协作审查和完善
       condition: validation_issues_found
-      notes: "如果发现问题，姜尚和嫦娥协作修正相关文档并重新验证。"
+      notes: "如果发现问题，产品负责人和UX专家协作修正相关文档并重新验证。"
 
     - workflow_end:
       action: handoff_to_technical_layer
@@ -193,7 +275,7 @@ workflow:
         trigger_condition: "所有业务价值层文档完成并验证通过"
         handoff_ceremony:
           name: "PRD评审会"
-          participants: ["姜尚", "嫦娥", "鲁班", "文殊菩萨"]
+          participants: ["产品负责人", "UX专家", "架构师", "QA负责人"]
           duration: "90分钟"
           agenda:
             - "PRD文档完整性检查"
@@ -248,7 +330,7 @@ workflow:
 
   collaboration_patterns:
     po_ux_daily_sync:
-      participants: ["姜尚", "嫦娥"]
+      participants: ["产品负责人", "UX专家"]
       frequency: "daily"
       duration: "15分钟"
       format: "sync"
@@ -262,7 +344,7 @@ workflow:
         - "问题解决方案"
 
     collaborative_document_creation:
-      participants: ["姜尚", "嫦娥"]
+      participants: ["产品负责人", "UX专家"]
       frequency: "per_milestone"
       duration: "60-120分钟"
       format: "sync"
@@ -278,14 +360,14 @@ workflow:
   flow_diagram: |
     ```mermaid
     graph TD
-        A[开始: 产品文档编写] --> B[姜尚: 需求收集 → project-brief.md]
-        B --> C[嫦娥: 用户研究 → user-research-insights.md]
-        C --> D[姜尚+嫦娥: 协作创建 prd.md]
-        D --> E[嫦娥: UX规格 → ux-specification.md]
-        E --> F[姜尚: 史诗规划 → epic-*.md]
-        F --> G[姜尚+嫦娥: 用户故事 → story-*.md]
-        G --> H[姜尚: 业务验证]
-        H --> I[嫦娥: UX验证]
+        A[开始: 产品文档编写] --> B[产品负责人: 需求收集 → project-brief.md]
+        B --> C[UX专家: 用户研究 → user-research-insights.md]
+        C --> D[产品负责人+UX专家: 协作创建 prd.md]
+        D --> E[UX专家: UX规格 → ux-specification.md]
+        E --> F[产品负责人: 史诗规划 → epic-*.md]
+        F --> G[产品负责人+UX专家: 用户故事 → story-*.md]
+        G --> H[产品负责人: 业务验证]
+        H --> I[UX专家: UX验证]
         I --> J{发现问题?}
         J -->|是| K[协作修正文档]
         J -->|否| L[移交技术设计层]
@@ -307,15 +389,16 @@ workflow:
       - MVP定义和规划
 
   handoff_prompts:
-    po_start: "开始需求收集，姜尚请创建项目简介，明确产品目标和目标用户。"
-    ux_research: "项目简介完成，嫦娥请进行用户研究，提供用户洞察和体验建议。"
-    collaborative_prd: "姜尚主导创建PRD，嫦娥协作提供用户体验需求输入。"
-    ux_specification: "PRD完成，嫦娥请创建详细的用户体验规格说明。"
-    epic_planning: "姜尚请基于PRD和UX规格进行史诗规划，明确MVP范围。"
-    story_creation: "姜尚创建用户故事，嫦娥提供UX验收标准。"
-    validation_phase: "姜尚进行业务验证，嫦娥进行UX验证。"
+    deep_research_start: "[RESEARCH模式] 开始深度产品调研，运用多维思维进行全面需求分析。"
+    po_start: "深度调研完成，开始基于调研洞察进行需求收集和项目简介创建。"
+    ux_research: "项目简介完成，UX专家请进行用户研究，提供用户洞察和体验建议。"
+    collaborative_prd: "产品负责人主导创建PRD，整合深度调研成果，UX专家协作提供用户体验需求输入。"
+    ux_specification: "PRD完成，UX专家请创建详细的用户体验规格说明。"
+    epic_planning: "产品负责人请基于PRD和UX规格进行史诗规划，明确MVP范围。"
+    story_creation: "产品负责人创建用户故事，UX专家提供UX验收标准。"
+    validation_phase: "产品负责人进行业务验证，UX专家进行UX验证。"
     collaboration_needed: "发现问题需要协作解决: [具体问题描述]"
-    technical_handoff: "业务价值层文档完成，移交给技术设计层(鲁班+文殊菩萨)进行系统设计。"
+    technical_handoff: "业务价值层文档完成，移交给技术设计层(架构师+QA负责人)进行系统设计。"
 
 # === 度量指标 ===
   metrics:

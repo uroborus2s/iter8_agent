@@ -1,0 +1,69 @@
+# 开发文件
+src/
+tsconfig.json
+*.ts
+!*.d.ts
+
+# 测试和构建工具
+test/
+tests/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+jest.config.js
+coverage/
+
+# 开发依赖和工具
+node_modules/
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+
+# 临时文件和日志
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# 项目管理文件
+cleanup-project.js
+version-manager.js
+version-config.json
+version-update-report.json
+cleanup-report.json
+
+# 开发文档（保留用户文档）
+docs/troubleshooting.md
+docs/quick-start.md
+
+# 缓存和构建产物（除了最终产物）
+.cache/
+dist/
+build/
+*.tsbuildinfo
+
+# 环境配置
+.env
+.env.*
+!.env.example
+
+# 编辑器配置
+.editorconfig
+.eslintrc.*
+.prettierrc.*
+
+# 包管理器文件
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# 保留的文件（确保这些文件被包含）
+# index.js - 主要入口文件
+# index.d.ts - TypeScript声明文件
+# .iter8/ - 核心配置目录
+# README.md - 项目说明
+# LICENSE - 许可证文件

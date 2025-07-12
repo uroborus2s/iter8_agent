@@ -1,0 +1,64 @@
+{
+  "mcpServers": {
+    "iter8-agile-team": {
+      "command": "node",
+      "args": ["/Users/uroborus/AiProject/iter8_agent/index.js"],
+      "cwd": ".",
+      "env": {
+        "ITER8_PROJECT_ROOT": ".",
+        "ITER8_CONFIG_PATH": ".iter8/config.yml",
+        "ITER8_ROLES_PATH": ".iter8/agents",
+        "ITER8_WORKFLOWS_PATH": ".iter8/workflows",
+        "ITER8_TEMPLATES_PATH": ".iter8/templates",
+        "ITER8_DOCS_PATH": "docs",
+        "ITER8_ROLE_DEFINITIONS_PATH": ".iter8/teams/role-definitions",
+        "NODE_ENV": "production",
+        "DEBUG": "iter8:*"
+      },
+      "timeout": 30000,
+      "retries": 3,
+      "description": "iter8敏捷团队AI代理系统 - 基于封神演义8角色的智能协作框架",
+      "version": "0.0.1",
+      "capabilities": {
+        "tools": true,
+        "resources": true,
+        "prompts": true,
+        "logging": true,
+        "progress": true
+      },
+      "transport": {
+        "type": "stdio",
+        "encoding": "utf-8"
+      },
+      "logging": {
+        "level": "info",
+        "format": "json",
+        "enabled": true
+      },
+      "health_check": {
+        "enabled": true,
+        "interval": 30000,
+        "timeout": 5000
+      },
+      "rate_limiting": {
+        "enabled": true,
+        "max_requests_per_minute": 60,
+        "burst_limit": 10
+      }
+    }
+  },
+  "mcp": {
+    "version": "1.0",
+    "protocol": "stdio",
+    "enabled": true,
+    "logLevel": "info",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "retryDelay": 1000,
+    "maxConcurrentConnections": 5,
+    "keepAlive": true,
+    "compression": false
+  },
+
+  "note": "简化配置，专注本地MCP服务器部署"
+}

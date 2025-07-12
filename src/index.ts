@@ -3,7 +3,7 @@
 /**
  * iter8 Augment Code MCP服务器
  * 为Augment Code提供iter8敏捷团队AI代理集成
- * 版本: 2.1
+ * 版本: 0.0.1
  * 创建日期: 2025-01-08
  * 更新日期: 2025-01-08
  *
@@ -281,7 +281,7 @@ class Iter8MCPServer {
     this.server = new Server(
       {
         name: "iter8-agile-team",
-        version: "2.1.0",
+        version: "0.0.1",
       },
       {
         capabilities: {
@@ -445,6 +445,30 @@ class Iter8MCPServer {
               required: ["project_type", "requirements"],
             },
           },
+          {
+            name: "declare_thinking_mode",
+            description: "声明当前思维模式 (基于RIPER-5协议)",
+            inputSchema: {
+              type: "object",
+              properties: {
+                mode: {
+                  type: "string",
+                  enum: ["RESEARCH", "INNOVATE", "PLAN", "EXECUTE", "REVIEW"],
+                  description:
+                    "思维模式 (RESEARCH/INNOVATE/PLAN/EXECUTE/REVIEW)",
+                },
+                context: {
+                  type: "string",
+                  description: "当前上下文信息",
+                },
+                reasoning: {
+                  type: "string",
+                  description: "选择此模式的推理依据",
+                },
+              },
+              required: ["mode"],
+            },
+          },
         ],
       };
     });
@@ -469,6 +493,8 @@ class Iter8MCPServer {
               return await this.facilitateCollaboration(args);
             case "tech_stack_consultation":
               return await this.techStackConsultation(args);
+            case "declare_thinking_mode":
+              return await this.declareThinkingMode(args);
             default:
               throw new McpError(ErrorCode.MethodNotFound, `未知工具: ${name}`);
           }
@@ -523,33 +549,40 @@ class Iter8MCPServer {
     // 获取系统信息
     const systemInfo = await this.getSystemInfo();
 
+    // 获取当前时间信息
+    const timeInfo = this.getCurrentTimeInfo();
+
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(
-            {
-              role_activated: true,
-              role_info: {
-                id: role.id,
-                name: role.name,
-                title: role.title,
-                layer: role.layer,
-                icon: role.icon,
-                mythological_title: role.mythological_title,
-                professional_title: role.professional_title,
-              },
-              capabilities: role.capabilities,
-              auto_loaded_context: roleContext,
-              system_info: systemInfo,
-              activation_message: `${role.name}已激活！我是${role.mythological_title}，现在担任${role.professional_title}。`,
-              collaboration_suggestions:
-                this.getCollaborationSuggestions(roleId),
-              available_actions: this.getAvailableActions(roleId),
-            },
-            null,
-            2
-          ),
+          text: `# ${role.icon} ${role.name} 已激活
+
+**${role.mythological_title}** | **${role.professional_title}**
+*激活时间: ${timeInfo.chineseDateTime}*
+
+## 🎯 角色能力
+${role.capabilities.map((cap) => `- ${cap}`).join("\n")}
+
+## 🤝 协作建议
+${this.getCollaborationSuggestions(roleId)
+  .map((suggestion) => `- ${suggestion}`)
+  .join("\n")}
+
+## ⚡ 可用操作
+${this.getAvailableActions(roleId)
+  .map((action) => `- ${action}`)
+  .join("\n")}
+
+---
+
+## 📋 项目信息收集模板
+
+${this.getProjectInfoTemplate()}
+
+---
+
+*如需查看详细系统信息，请使用 \`*get_project_context\` 命令*`,
         },
       ],
     };
@@ -721,15 +754,24 @@ class Iter8MCPServer {
   private getAvailableActions(roleId: string): string[] {
     const actionsMap: Record<string, string[]> = {
       po: [
+        "deep_research",
+        "collect_user_insights",
+        "refine_requirements",
         "create_prd",
         "create_epic",
         "create_user_story",
         "validate_business_value",
+        "apply_multidimensional_thinking",
       ],
       "ux-expert": [
+        "multidimensional_ux_research",
+        "analyze_user_emotions",
+        "explore_innovative_ux",
+        "validate_ux_assumptions",
         "create_user_research",
         "create_ux_specification",
         "design_user_flow",
+        "apply_multidimensional_ux_thinking",
       ],
       architect: [
         "design_system_architecture",
@@ -768,6 +810,9 @@ class Iter8MCPServer {
       const workflowContent = await fs.readFile(workflowPath, "utf8");
       const workflow = yaml.load(workflowContent) as any;
 
+      // 获取当前时间信息
+      const timeInfo = this.getCurrentTimeInfo();
+
       // 创建执行ID
       const executionId = `${workflow_id}-${Date.now()}`;
 
@@ -783,6 +828,7 @@ class Iter8MCPServer {
                 workflow_started: true,
                 workflow_id,
                 execution_id: executionId,
+                start_time: timeInfo.currentDateTime,
                 workflow_name: workflow.workflow?.name || workflow_id,
                 description: workflow.workflow?.description || "工作流描述",
                 participants:
@@ -797,7 +843,13 @@ class Iter8MCPServer {
                   : "等待配置",
                 message: `工作流 ${
                   workflow.workflow?.name || workflow_id
-                } 已启动`,
+                } 已启动 (${timeInfo.chineseDateTime})`,
+                time_info: {
+                  start_date: timeInfo.currentDate,
+                  start_time: timeInfo.currentDateTime,
+                  chinese_time: timeInfo.chineseDateTime,
+                  timestamp: timeInfo.fullTimestamp,
+                },
                 steps: workflow.workflow?.sequence || [],
               },
               null,
@@ -860,27 +912,435 @@ class Iter8MCPServer {
   private async generateTemplate(args: any) {
     const { template_type, variables = {}, interactive = true } = args;
 
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+    try {
+      // 1. 检查是否为需要信息收集的模板类型
+      const requiresInfoCollection = [
+        "prd",
+        "project-brief",
+        "epic",
+        "story",
+        "user-insights-collection",
+        "requirement-refinement",
+      ].includes(template_type);
+
+      if (
+        requiresInfoCollection &&
+        (!variables || Object.keys(variables).length === 0)
+      ) {
+        // 返回信息收集模板
+        const infoTemplate = this.getProjectInfoTemplate();
+        return {
+          content: [
             {
-              template_generated: true,
-              template_type,
-              variables,
-              interactive_mode: interactive,
-              message: `${template_type} 模板已生成`,
-              next_steps: interactive
-                ? ["收集用户输入", "填充模板变量", "生成最终文档"]
-                : ["直接生成文档"],
+              type: "text",
+              text: `⚠️ 创建 ${template_type} 文档前需要收集项目信息\n\n${infoTemplate}\n\n📝 请填写上述信息后，使用以下命令生成文档：\n\`\`\`\n*generate_template ${template_type} --variables '{\n  "projectName": "您的项目名称",\n  "projectManager": "真实负责人姓名",\n  "teamMembers": ["成员1", "成员2"],\n  "targetUsers": ["用户群体1", "用户群体2"],\n  "businessObjectives": ["目标1", "目标2"]\n}'\n\`\`\``,
             },
-            null,
-            2
-          ),
-        },
-      ],
+          ],
+        };
+      }
+
+      // 2. 加载模板文件
+      const templatePath = path.join(
+        process.cwd(),
+        this.templatesPath,
+        `${template_type}-tmpl.md`
+      );
+      const templateContent = await fs.readFile(templatePath, "utf8");
+
+      // 3. 处理模板变量
+      const processedContent = this.processTemplateVariables(
+        templateContent,
+        variables
+      );
+
+      // 4. 生成文件名和路径
+      const fileName = this.generateFileName(template_type);
+      const filePath = path.join("docs", fileName);
+
+      // 5. 保存文档
+      await this.ensureDirectoryExists("docs");
+      await fs.writeFile(filePath, processedContent, "utf8");
+
+      // 6. 获取当前时间信息用于确认
+      const timeInfo = this.getCurrentTimeInfo();
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `✅ ${template_type} 文档已生成并保存到: ${filePath}\n\n📅 创建时间: ${
+              timeInfo.currentDate
+            } ${
+              timeInfo.currentDateTime
+            }\n\n🔍 文档预览:\n${processedContent.substring(
+              0,
+              500
+            )}...\n\n✨ 文档特点:\n- 使用当前实际日期: ${
+              timeInfo.currentDate
+            }\n- 不包含AI角色信息\n- 基于您提供的真实项目信息`,
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ 模板生成失败: ${
+              error instanceof Error ? error.message : "未知错误"
+            }`,
+          },
+        ],
+      };
+    }
+  }
+
+  private getCurrentTimeInfo() {
+    const now = new Date();
+
+    // 确保使用本地时区
+    const year = now.getFullYear().toString();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+
+    return {
+      currentDate: `${year}-${month}-${day}`,
+      currentDateTime: `${year}-${month}-${day} ${hours}:${minutes}`,
+      fullTimestamp: now.toISOString(),
+      localTimestamp: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`,
+      year,
+      month,
+      day,
+      hours,
+      minutes,
+      seconds,
+      // 中文格式
+      chineseDate: `${year}年${month}月${day}日`,
+      chineseDateTime: `${year}年${month}月${day}日 ${hours}:${minutes}`,
+      // 友好格式
+      friendlyDate: now.toLocaleDateString("zh-CN"),
+      friendlyDateTime: now.toLocaleString("zh-CN"),
     };
+  }
+
+  private processTemplateVariables(template: string, variables: any): string {
+    // 获取当前时间信息
+    const timeInfo = this.getCurrentTimeInfo();
+
+    // 安全的变量映射 - 确保团队信息留白
+    const safeVariables = {
+      "{{项目名称}}": variables.projectName || "[待填写项目名称]",
+      "{{项目代号}}":
+        variables.projectCode || variables.projectName || "[待填写项目代号]",
+      "{{创建日期}}": timeInfo.currentDate,
+      "{{创建时间}}": timeInfo.currentDateTime,
+      "{{当前日期}}": timeInfo.currentDate,
+      "{{当前时间}}": timeInfo.currentDateTime,
+      "{{项目负责人}}": this.sanitizePersonName(variables.projectManager),
+      "{{团队成员}}": this.sanitizeTeamMembers(variables.teamMembers),
+      "{{团队协作}}": this.sanitizeTeamMembers(variables.teamMembers),
+      "{{项目描述}}": variables.projectDescription || "[待填写项目描述]",
+      "{{目标用户}}":
+        this.formatArray(variables.targetUsers) || "[待填写目标用户]",
+      "{{业务目标}}":
+        this.formatArray(variables.businessObjectives) || "[待填写业务目标]",
+      "{{组织名称}}": variables.organization || "[待填写组织名称]",
+      "{{部门}}": variables.department || "[待填写部门]",
+      "{{文档版本}}": "v1.0",
+      "{{生成时间}}": timeInfo.fullTimestamp,
+      "{{年份}}": timeInfo.year,
+      "{{月份}}": timeInfo.month,
+      "{{日期}}": timeInfo.day,
+    };
+
+    // 执行变量替换
+    let processed = template;
+    for (const [placeholder, value] of Object.entries(safeVariables)) {
+      const regex = new RegExp(placeholder.replace(/[{}]/g, "\\$&"), "g");
+      processed = processed.replace(regex, value);
+    }
+
+    // 移除任何残留的AI角色引用
+    processed = this.removeAIRoleReferences(processed);
+
+    return processed;
+  }
+
+  private sanitizePersonName(name: any): string {
+    if (!name || typeof name !== "string") {
+      return "[待填写]";
+    }
+
+    const cleaned = name.trim();
+
+    // 检查是否是AI角色名称，如果是则留白
+    const aiRoleNames = [
+      "姜尚",
+      "嫦娥",
+      "鲁班",
+      "文殊菩萨",
+      "哪吒",
+      "杨戬",
+      "太乙真人",
+      "元始天尊",
+      "李靖",
+      "太公望",
+      "产品负责人",
+      "UX设计师",
+      "技术架构师",
+      "前端开发",
+      "后端开发",
+      "测试工程师",
+    ];
+    if (aiRoleNames.includes(cleaned)) {
+      return "[待填写]";
+    }
+
+    return cleaned || "[待填写]";
+  }
+
+  private sanitizeTeamMembers(members: any): string {
+    if (!members) return "[待填写团队成员]";
+
+    if (typeof members === "string") {
+      const memberList = members
+        .split(/[,，、]/)
+        .map((m) => this.sanitizePersonName(m.trim()));
+      const validMembers = memberList.filter((m) => m !== "[待填写]");
+      return validMembers.length > 0
+        ? validMembers.join(", ")
+        : "[待填写团队成员]";
+    }
+
+    if (Array.isArray(members)) {
+      const validMembers = members
+        .map((m) => this.sanitizePersonName(m))
+        .filter((m) => m !== "[待填写]");
+      return validMembers.length > 0
+        ? validMembers.join(", ")
+        : "[待填写团队成员]";
+    }
+
+    return "[待填写团队成员]";
+  }
+
+  private removeAIRoleReferences(content: string): string {
+    // 定义所有AI角色名称
+    const aiRoleNames = [
+      "姜尚",
+      "嫦娥",
+      "鲁班",
+      "文殊菩萨",
+      "哪吒",
+      "杨戬",
+      "太乙真人",
+      "元始天尊",
+      "李靖",
+    ];
+
+    const aiRolePatterns = [
+      // @角色名称
+      /@姜尚/g,
+      /@嫦娥/g,
+      /@鲁班/g,
+      /@文殊菩萨/g,
+      /@哪吒/g,
+      /@杨戬/g,
+      /@太乙真人/g,
+      /@元始天尊/g,
+      /@李靖/g,
+
+      // 文档创建者信息 - 最重要的修复
+      /\*\*文档由.*?姜尚.*?创建.*?\*\*/g,
+      /\*\*文档由.*?嫦娥.*?创建.*?\*\*/g,
+      /\*\*文档由.*?鲁班.*?创建.*?\*\*/g,
+      /\*\*文档由.*?文殊菩萨.*?创建.*?\*\*/g,
+      /\*\*文档由.*?哪吒.*?创建.*?\*\*/g,
+      /\*\*文档由.*?杨戬.*?创建.*?\*\*/g,
+      /\*\*文档由.*?太乙真人.*?创建.*?\*\*/g,
+      /\*\*文档由.*?元始天尊.*?创建.*?\*\*/g,
+      /\*\*文档由.*?李靖.*?创建.*?\*\*/g,
+
+      // 创建者、维护者信息
+      /创建者.*?姜尚.*?/g,
+      /创建者.*?嫦娥.*?/g,
+      /创建者.*?鲁班.*?/g,
+      /维护者.*?姜尚.*?/g,
+      /维护者.*?嫦娥.*?/g,
+      /维护者.*?鲁班.*?/g,
+
+      // 角色名称（职位）格式
+      /姜尚\s*（[^）]*）/g,
+      /嫦娥\s*（[^）]*）/g,
+      /鲁班\s*（[^）]*）/g,
+      /文殊菩萨\s*（[^）]*）/g,
+      /哪吒\s*（[^）]*）/g,
+      /杨戬\s*（[^）]*）/g,
+      /太乙真人\s*（[^）]*）/g,
+      /元始天尊\s*（[^）]*）/g,
+      /李靖\s*（[^）]*）/g,
+
+      // 角色名称 (职位) 格式
+      /姜尚\s*\([^)]*\)/g,
+      /嫦娥\s*\([^)]*\)/g,
+      /鲁班\s*\([^)]*\)/g,
+      /文殊菩萨\s*\([^)]*\)/g,
+      /哪吒\s*\([^)]*\)/g,
+      /杨戬\s*\([^)]*\)/g,
+      /太乙真人\s*\([^)]*\)/g,
+      /元始天尊\s*\([^)]*\)/g,
+      /李靖\s*\([^)]*\)/g,
+
+      // 协作团队相关
+      /协作团队.*?@\w+/g,
+      /团队协作.*?@\w+/g,
+      /@\w+\s*（[^）]*）/g,
+      /@\w+\s*\([^)]*\)/g,
+
+      // 单独的角色名称
+      /(?:^|[^a-zA-Z\u4e00-\u9fff])姜尚(?![a-zA-Z\u4e00-\u9fff])/g,
+      /(?:^|[^a-zA-Z\u4e00-\u9fff])嫦娥(?![a-zA-Z\u4e00-\u9fff])/g,
+      /(?:^|[^a-zA-Z\u4e00-\u9fff])鲁班(?![a-zA-Z\u4e00-\u9fff])/g,
+      /(?:^|[^a-zA-Z\u4e00-\u9fff])哪吒(?![a-zA-Z\u4e00-\u9fff])/g,
+      /(?:^|[^a-zA-Z\u4e00-\u9fff])李靖(?![a-zA-Z\u4e00-\u9fff])/g,
+    ];
+
+    let cleaned = content;
+
+    // 先处理文档创建者信息 - 完全删除这些行
+    const documentCreatorPatterns = [
+      /\*\*文档由.*?创建.*?\*\*/g,
+      /\*创建者.*?\*/g,
+      /\*维护者.*?\*/g,
+      /\*最后更新.*?\*/g,
+      /创建者[:：].*$/gm,
+      /维护者[:：].*$/gm,
+      /文档创建者[:：].*$/gm,
+      /文档维护者[:：].*$/gm,
+    ];
+
+    for (const pattern of documentCreatorPatterns) {
+      cleaned = cleaned.replace(pattern, "");
+    }
+
+    // 处理其他AI角色模式
+    for (const pattern of aiRolePatterns) {
+      cleaned = cleaned.replace(pattern, (match) => {
+        // 如果是文档创建者信息，完全删除
+        if (
+          match.includes("文档由") ||
+          match.includes("创建") ||
+          match.includes("维护")
+        ) {
+          return "";
+        }
+        // 其他情况保留前缀字符（如果有的话）
+        const prefix = match.match(/^[^a-zA-Z\u4e00-\u9fff]/);
+        return (prefix ? prefix[0] : "") + "[待填写]";
+      });
+    }
+
+    // 再处理简单的角色名称替换
+    for (const roleName of aiRoleNames) {
+      const simplePattern = new RegExp(`\\b${roleName}\\b`, "g");
+      cleaned = cleaned.replace(simplePattern, "[待填写]");
+    }
+
+    // 清理多余的空行
+    cleaned = cleaned.replace(/\n\s*\n\s*\n/g, "\n\n");
+
+    return cleaned;
+  }
+
+  private formatArray(arr: any): string {
+    if (!arr) return "";
+    if (typeof arr === "string") return arr;
+    if (Array.isArray(arr)) return arr.join(", ");
+    return "";
+  }
+
+  private generateFileName(templateType: string): string {
+    const timeInfo = this.getCurrentTimeInfo();
+    // 使用更精确的时间戳，包含时分秒
+    const timestamp = `${timeInfo.currentDate}-${timeInfo.hours}${timeInfo.minutes}${timeInfo.seconds}`;
+    return `${templateType}-${timestamp}.md`;
+  }
+
+  private async ensureDirectoryExists(dirPath: string): Promise<void> {
+    try {
+      await fs.mkdir(dirPath, { recursive: true });
+    } catch (error) {
+      // 目录可能已存在
+    }
+  }
+
+  private getProjectInfoTemplate(): string {
+    const timeInfo = this.getCurrentTimeInfo();
+
+    return `# 📋 项目信息收集模板
+
+> 如需生成个性化文档，请填写以下信息
+
+## 🎯 基本项目信息
+- **项目名称**: _______________
+- **项目简介**: _______________
+- **项目类型**:
+  - [ ] Web应用
+  - [ ] 移动应用
+  - [ ] 桌面应用
+  - [ ] API/后端服务
+  - [ ] 数据平台
+  - [ ] 其他: _______________
+
+## � 团队信息
+- **项目负责人**: _______________
+- **产品经理**: _______________
+- **技术负责人**: _______________
+- **UX设计师**: _______________
+- **开发团队成员**: _______________
+- **测试工程师**: _______________
+
+## 🎯 业务信息
+- **目标用户群体**: _______________
+- **主要业务目标**: _______________
+- **核心功能需求**: _______________
+- **成功指标**: _______________
+- **项目时间线**: _______________
+
+## 🏢 组织信息
+- **公司/组织名称**: _______________
+- **部门**: _______________
+- **项目发起人**: _______________
+- **主要利益相关者**: _______________
+
+---
+
+## 📝 使用说明
+
+填写完成后，使用以下命令生成文档：
+
+\`\`\`
+*generate_template prd --variables '{
+  "projectName": "您的项目名称",
+  "projectManager": "真实负责人姓名",
+  "teamMembers": ["成员1", "成员2"],
+  "targetUsers": ["用户群体1", "用户群体2"],
+  "businessObjectives": ["目标1", "目标2"],
+  "organization": "公司名称",
+  "department": "部门名称"
+}'
+\`\`\`
+
+⚠️ **重要提醒**：
+- 请提供真实的团队成员姓名
+- 不要使用AI角色名称
+- 如果暂时没有确定的人员，请填写"待确定"
+- 所有信息都可以后续修改
+
+*模板生成时间: ${timeInfo.chineseDateTime}*`;
   }
 
   // 获取项目上下文
@@ -1063,43 +1523,48 @@ class Iter8MCPServer {
     request: string,
     context: string
   ) {
+    const timeInfo = this.getCurrentTimeInfo();
+
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(
-            {
-              role_activated: true,
-              role_info: {
-                id: role.id,
-                name: role.name,
-                title: role.title,
-                icon: role.icon,
-                professional_title: role.professional_title,
-              },
-              document_creation_mode: true,
-              message: `${role.name}已激活！我是${role.mythological_title}，现在为您创建专业文档。`,
-              information_collection_prompt: this.generateInfoCollectionPrompt(
-                role,
-                request,
-                context
-              ),
-              next_steps: [
-                "收集项目基础信息",
-                "验证信息完整性",
-                "创建专业文档",
-                "确保文档质量",
-              ],
-              requirements: [
-                "使用用户真实姓名作为文档创建者",
-                "基于真实项目信息创建文档",
-                "不在文档中出现AI角色名称",
-                "确保文档专业性和可执行性",
-              ],
-            },
-            null,
-            2
-          ),
+          text: `# 🎯 项目信息收集启动
+
+**激活时间**: ${timeInfo.currentDateTime}
+**收集模式**: 交互式问答
+**文档类型**: ${this.detectDocumentType(request)}
+
+---
+
+## 📋 信息收集流程
+
+在创建任何文档之前，我需要通过对话收集完整的项目信息。
+
+### 🔍 第一阶段：项目基础信息
+
+请逐一回答以下问题：
+
+1. **项目名称**: 请告诉我您的项目名称是什么？
+
+2. **核心问题**: 您希望这个项目解决什么核心问题？
+
+3. **目标用户**: 您的目标用户群体是谁？
+
+4. **时间计划**: 您期望的项目上线时间是什么时候？
+
+5. **团队资源**: 您的团队规模和预算范围大概是多少？
+
+---
+
+## ⚠️ 重要说明
+
+- ✅ **所有信息都将通过对话收集**
+- ✅ **文档将基于您提供的真实信息创建**
+- ✅ **文档中不会包含任何AI角色信息**
+- ✅ **使用您的真实姓名作为文档创建者**
+
+请从第一个问题开始回答，我会根据您的回答继续深入了解项目需求。`,
         },
       ],
     };
@@ -1134,6 +1599,35 @@ class Iter8MCPServer {
 ${context ? `**上下文**: ${context}` : ""}
 
 请详细回答这些问题，我将基于您的具体情况提供专业的技术选型建议。`;
+  }
+
+  // 检测文档类型
+  private detectDocumentType(request: string): string {
+    const lowerRequest = request.toLowerCase();
+
+    if (lowerRequest.includes("prd") || lowerRequest.includes("产品需求")) {
+      return "PRD (产品需求文档)";
+    }
+    if (
+      lowerRequest.includes("用户故事") ||
+      lowerRequest.includes("user story")
+    ) {
+      return "用户故事文档";
+    }
+    if (
+      lowerRequest.includes("架构") ||
+      lowerRequest.includes("architecture")
+    ) {
+      return "架构设计文档";
+    }
+    if (lowerRequest.includes("ux") || lowerRequest.includes("用户体验")) {
+      return "UX设计文档";
+    }
+    if (lowerRequest.includes("调研") || lowerRequest.includes("research")) {
+      return "产品调研文档";
+    }
+
+    return "项目文档";
   }
 
   // 生成信息收集提示
@@ -1519,6 +2013,85 @@ ${context ? `**上下文**: ${context}` : ""}
     strategies.push("建立完善的文档和最佳实践");
 
     return strategies;
+  }
+
+  // 声明思维模式
+  private async declareThinkingMode(args: any) {
+    const { mode, context = "", reasoning = "" } = args;
+
+    const validModes = ["RESEARCH", "INNOVATE", "PLAN", "EXECUTE", "REVIEW"];
+
+    if (!validModes.includes(mode)) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ 无效的思维模式: ${mode}\n\n有效模式: ${validModes.join(
+              ", "
+            )}`,
+          },
+        ],
+      };
+    }
+
+    const timeInfo = this.getCurrentTimeInfo();
+
+    const modeDescriptions = {
+      RESEARCH: "深度信息收集和系统性分析",
+      INNOVATE: "创新方案探索和辩证评估",
+      PLAN: "详细规划制定和系统性设计",
+      EXECUTE: "严格按计划执行实施",
+      REVIEW: "批判性审查和质量验证",
+    };
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `🧠 **[MODE: ${mode}]** 思维模式已激活
+
+**模式说明**: ${modeDescriptions[mode as keyof typeof modeDescriptions]}
+**激活时间**: ${timeInfo.currentDateTime}
+**上下文**: ${context || "无特定上下文"}
+**推理依据**: ${reasoning || "无特定推理"}
+
+## 🎯 当前模式指导原则
+
+${this.getThinkingModeGuidance(mode)}
+
+---
+
+*请在后续操作中严格遵循当前思维模式的原则和约束*`,
+        },
+      ],
+    };
+  }
+
+  // 获取思维模式指导
+  private getThinkingModeGuidance(mode: string): string {
+    const guidance = {
+      RESEARCH: `**允许**: 信息收集、需求挖掘、约束识别、现状分析
+**禁止**: 方案推荐、解决方案设计、具体规划
+**核心原则**: 系统性思维、全面性分析`,
+
+      INNOVATE: `**允许**: 多方案探索、创新机会识别、利弊分析、可行性评估
+**禁止**: 具体规划、实施细节、最终决策
+**核心原则**: 创新思维、辩证思维`,
+
+      PLAN: `**允许**: 详细规划、具体方案、实施路径、资源配置
+**禁止**: 实施执行、方案修改
+**核心原则**: 系统性思维、批判思维`,
+
+      EXECUTE: `**允许**: 严格按计划实施、报告偏差、质量控制
+**禁止**: 计划外修改、未报告的偏差
+**核心原则**: 执行忠实性、质量保证`,
+
+      REVIEW: `**允许**: 全面审查、质量验证、问题识别、改进建议
+**禁止**: 新的实施、计划修改
+**核心原则**: 批判思维、系统性验证`,
+    };
+
+    return guidance[mode as keyof typeof guidance] || "无指导信息";
   }
 }
 

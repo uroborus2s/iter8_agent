@@ -1,7 +1,7 @@
 # iter8 角色激活系统配置
 # 统一管理8个封神演义角色的触发机制和API接口
 
-version: "2.0"
+version: "0.0.1"
 system_name: "iter8-role-activation-system"
 created_date: "2025-01-08"
 

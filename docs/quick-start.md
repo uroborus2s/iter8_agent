@@ -99,7 +99,7 @@
 
 ### 环境要求
 - **Node.js**: >= 18.0.0
-- **npm**: >= 9.0.0
+- **pnpm**: >= 8.0.0
 - **Git**: >= 2.30.0
 - **操作系统**: macOS, Linux, Windows
 
@@ -144,20 +144,23 @@ cursor .
 # 在Cursor中输入: @姜尚 为我的项目创建PRD
 ```
 
-#### 🔧 高级：Augment Code MCP服务器
+#### 🔧 推荐：本地安装使用
 
 ```bash
-# 1. 进入MCP服务器目录
-cd .iter8/integrations/augment-code/mcp-server
+# 1. 全局安装iter8
+npm install -g iter8
 
-# 2. 安装依赖并构建
-npm install
-npm run build
+# 2. 初始化项目
+iter8 init
 
-# 3. 启动服务器
-npm start
+# 3. 启动MCP服务器
+iter8 start
 
-# 4. 配置Augment Code（参考集成文档）
+# 4. 配置AI工具
+iter8 config --tool augment-code
+
+# 5. 参考集成文档
+# docs/mcp-integration-guide.md
 ```
 
 #### 💻 命令行：Gemini CLI工具

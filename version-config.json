@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1",
+  "name": "iter8-agile-team-mcp-server",
+  "description": "iter8敏捷团队AI代理MCP服务器 - 基于封神演义8角色的智能协作框架",
+  "release_date": "2025-07-09",
+  "version_history": [
+    {
+      "version": "0.0.1",
+      "date": "2025-01-09",
+      "status": "previous",
+      "notes": "项目初始化版本"
+    },
+    {
+      "version": "0.0.1",
+      "date": "2025-07-09",
+      "status": "current",
+      "notes": "自动版本更新"
+    }
+  ],
+  "version_targets": {
+    "package.json": {
+      "path": "package.json",
+      "field": "version",
+      "format": "semver"
+    },
+    "mcp_server_config": {
+      "path": ".iter8/config.yml",
+      "field": "integrations.augment_code.mcp_server.version",
+      "format": "semver"
+    },
+    "mcp_server_class": {
+      "path": "src/index.ts",
+      "pattern": "version: \"{{version}}\"",
+      "line_pattern": "version: \".*\""
+    },
+    "role_definitions": {
+      "path_pattern": ".iter8/teams/role-definitions/*.yml",
+      "pattern": "# 版本: {{version}}",
+      "line_pattern": "# 版本: .*"
+    },
+    "readme": {
+      "path": "README.md",
+      "pattern": "版本: {{version}}",
+      "line_pattern": "版本: .*"
+    }
+  },
+  "semantic_versioning": {
+    "major": "破坏性变更",
+    "minor": "新功能添加",
+    "patch": "错误修复",
+    "prerelease": "预发布版本（alpha, beta, rc）"
+  },
+  "release_notes_template": "## {{version}} ({{date}})\n\n### 新功能\n- \n\n### 改进\n- \n\n### 修复\n- \n\n### 破坏性变更\n- "
+}

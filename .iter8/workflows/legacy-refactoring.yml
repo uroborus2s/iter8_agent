@@ -1,0 +1,185 @@
+workflow:
+  id: legacy-refactoring
+  name: 老项目重构协作流程
+  description: >-
+    专门针对老项目重构的完整工作流，从现状分析到重构实施的全流程协作。
+    确保重构过程的系统性、安全性和高质量。
+  version: "2.1"
+  created_date: "2025-01-08"
+  type: legacy-modernization
+  team: full-stack-refactoring
+  project_types:
+    - legacy-system
+    - technical-debt-reduction
+    - architecture-modernization
+    - code-quality-improvement
+
+  # 前置条件
+  prerequisites:
+    documents: []
+    conditions:
+      - "项目代码可访问"
+      - "重构目标明确"
+      - "团队资源确认"
+    quality_gates: []
+
+  sequence:
+    # 阶段1：现状分析 (业务价值层)
+    - step: legacy_analysis
+      name: "老项目现状全面分析"
+      agent: orchestrator
+      action: 项目整体评估和重构规划
+      deliverables:
+        - "项目现状报告"
+        - "重构优先级矩阵"
+        - "风险评估报告"
+      estimated_duration: "1-2天"
+      
+    - step: business_value_audit
+      name: "业务价值和用户体验审计"
+      agent: po
+      action: 分析现有业务逻辑和用户价值
+      deliverables:
+        - "业务价值分析报告"
+        - "功能优先级评估"
+        - "用户影响分析"
+      estimated_duration: "1天"
+      dependencies: ["legacy_analysis"]
+      
+    - step: ux_experience_audit
+      name: "用户体验现状审计"
+      agent: ux-expert
+      action: 评估当前用户体验和界面问题
+      deliverables:
+        - "UX问题清单"
+        - "用户体验改进建议"
+        - "界面重构方案"
+      estimated_duration: "1天"
+      dependencies: ["business_value_audit"]
+
+    # 阶段2：技术分析 (技术设计层)
+    - step: technical_debt_analysis
+      name: "技术债务深度分析"
+      agent: analyst
+      action: 识别和量化技术债务
+      deliverables:
+        - "技术债务清单"
+        - "代码质量报告"
+        - "重构成本评估"
+      estimated_duration: "2天"
+      dependencies: ["ux_experience_audit"]
+      
+    - step: architecture_assessment
+      name: "架构现状评估和重设计"
+      agent: architect
+      action: 分析现有架构并设计新架构
+      deliverables:
+        - "架构现状分析"
+        - "新架构设计方案"
+        - "迁移策略规划"
+      estimated_duration: "2-3天"
+      dependencies: ["technical_debt_analysis"]
+
+    # 阶段3：重构规划 (流程协调层)
+    - step: refactoring_strategy
+      name: "重构策略制定"
+      agent: master
+      action: 制定详细的重构实施策略
+      deliverables:
+        - "重构实施计划"
+        - "里程碑定义"
+        - "风险缓解策略"
+      estimated_duration: "1天"
+      dependencies: ["architecture_assessment"]
+
+    # 阶段4：分阶段实施 (实现层)
+    - step: phase1_implementation
+      name: "第一阶段重构实施"
+      agent: dev
+      action: 执行高优先级重构任务
+      deliverables:
+        - "重构代码"
+        - "重构文档"
+        - "变更日志"
+      estimated_duration: "1-2周"
+      dependencies: ["refactoring_strategy"]
+      
+    - step: quality_assurance
+      name: "重构质量保证"
+      agent: qa
+      action: 全面测试重构后的系统
+      deliverables:
+        - "测试报告"
+        - "质量评估"
+        - "回归测试结果"
+      estimated_duration: "3-5天"
+      dependencies: ["phase1_implementation"]
+
+    # 阶段5：迭代优化
+    - step: continuous_improvement
+      name: "持续改进和优化"
+      agent: master
+      action: 监控重构效果并持续优化
+      deliverables:
+        - "效果评估报告"
+        - "下阶段改进计划"
+        - "最佳实践总结"
+      estimated_duration: "持续进行"
+      dependencies: ["quality_assurance"]
+
+  # 质量门禁
+  quality_gates:
+    - gate: analysis_completeness
+      criteria:
+        - "现状分析完整性 > 90%"
+        - "技术债务识别覆盖率 > 85%"
+        - "业务价值评估准确性 > 90%"
+      
+    - gate: design_quality
+      criteria:
+        - "新架构设计合理性 > 90%"
+        - "迁移策略可行性 > 85%"
+        - "风险评估完整性 > 90%"
+        
+    - gate: implementation_quality
+      criteria:
+        - "代码质量提升 > 30%"
+        - "测试覆盖率 > 80%"
+        - "性能改进 > 20%"
+
+  # 风险管理
+  risk_management:
+    high_risks:
+      - risk: "业务功能回归"
+        mitigation: "全面回归测试和灰度发布"
+      - risk: "数据迁移失败"
+        mitigation: "数据备份和分步迁移"
+      - risk: "性能下降"
+        mitigation: "性能基准测试和监控"
+    
+    medium_risks:
+      - risk: "团队学习成本"
+        mitigation: "技术培训和文档完善"
+      - risk: "第三方依赖冲突"
+        mitigation: "依赖兼容性测试"
+
+  # 成功标准
+  success_criteria:
+    technical:
+      - "代码质量评分提升 > 40%"
+      - "技术债务减少 > 50%"
+      - "系统性能提升 > 25%"
+      - "维护成本降低 > 30%"
+    
+    business:
+      - "用户体验评分提升 > 30%"
+      - "功能交付速度提升 > 40%"
+      - "系统稳定性提升 > 50%"
+      - "团队开发效率提升 > 35%"
+
+  # 交付物模板
+  deliverable_templates:
+    - "legacy-analysis-tmpl"
+    - "refactoring-plan-tmpl"
+    - "architecture-migration-tmpl"
+    - "quality-assessment-tmpl"

@@ -1,0 +1,216 @@
+workflow:
+  id: interactive-info-collection
+  name: 交互式项目信息收集流程
+  description: >-
+    在创建任何项目文档之前，通过结构化的交互式流程收集完整的项目信息，
+    确保文档的准确性、专业性和可执行性。
+  version: "2.1"
+  created_date: "2025-01-08"
+  type: information-gathering
+  team: documentation-preparation
+  project_types:
+    - all-projects
+
+  # 前置条件
+  prerequisites:
+    documents: []
+    conditions:
+      - "用户明确文档创建需求"
+      - "用户有权限提供项目信息"
+    quality_gates: []
+
+  sequence:
+    # 阶段1：需求确认
+    - step: requirement_confirmation
+      name: "文档需求确认"
+      agent: any
+      action: 确认用户的文档创建需求和期望
+      deliverables:
+        - "文档类型确认"
+        - "文档用途说明"
+        - "质量要求明确"
+      estimated_duration: "5分钟"
+      
+    # 阶段2：信息收集清单展示
+    - step: checklist_presentation
+      name: "信息收集清单展示"
+      agent: any
+      action: 向用户展示结构化的信息收集清单
+      deliverables:
+        - "完整信息收集清单"
+        - "必填项和可选项说明"
+        - "信息重要性解释"
+      estimated_duration: "5分钟"
+      dependencies: ["requirement_confirmation"]
+      
+    # 阶段3：基础信息收集
+    - step: basic_info_collection
+      name: "基础项目信息收集"
+      agent: any
+      action: 收集项目基本信息和团队信息
+      deliverables:
+        - "项目基本信息"
+        - "团队组织结构"
+        - "项目背景和目标"
+      estimated_duration: "10-15分钟"
+      dependencies: ["checklist_presentation"]
+      
+    # 阶段4：业务需求收集
+    - step: business_requirements
+      name: "业务需求详细收集"
+      agent: any
+      action: 深入收集业务需求和用户信息
+      deliverables:
+        - "详细业务需求"
+        - "用户画像和场景"
+        - "功能需求列表"
+      estimated_duration: "15-20分钟"
+      dependencies: ["basic_info_collection"]
+      
+    # 阶段5：技术约束收集
+    - step: technical_constraints
+      name: "技术约束和环境收集"
+      agent: any
+      action: 收集技术栈、约束条件和环境信息
+      deliverables:
+        - "技术栈信息"
+        - "约束条件清单"
+        - "环境和基础设施要求"
+      estimated_duration: "10-15分钟"
+      dependencies: ["business_requirements"]
+      
+    # 阶段6：时间资源收集
+    - step: timeline_resources
+      name: "时间线和资源信息收集"
+      agent: any
+      action: 收集项目时间线、里程碑和资源约束
+      deliverables:
+        - "项目时间线"
+        - "关键里程碑"
+        - "资源约束信息"
+      estimated_duration: "10分钟"
+      dependencies: ["technical_constraints"]
+      
+    # 阶段7：信息验证和补充
+    - step: information_validation
+      name: "信息完整性验证和补充"
+      agent: any
+      action: 验证收集信息的完整性，针对缺失部分进行补充收集
+      deliverables:
+        - "信息完整性报告"
+        - "补充信息收集"
+        - "信息准确性确认"
+      estimated_duration: "10分钟"
+      dependencies: ["timeline_resources"]
+      
+    # 阶段8：信息确认和文档创建准备
+    - step: final_confirmation
+      name: "最终信息确认和文档创建准备"
+      agent: any
+      action: 最终确认所有收集的信息，准备开始文档创建
+      deliverables:
+        - "完整项目信息包"
+        - "文档创建计划"
+        - "质量检查清单"
+      estimated_duration: "5分钟"
+      dependencies: ["information_validation"]
+
+  # 信息收集标准
+  collection_standards:
+    mandatory_fields:
+      - "项目名称"
+      - "项目类型"
+      - "项目负责人真实姓名"
+      - "核心业务目标"
+      - "主要用户群体"
+      - "关键功能需求"
+      - "项目时间线"
+      
+    recommended_fields:
+      - "技术栈信息"
+      - "团队结构"
+      - "预算约束"
+      - "质量要求"
+      - "风险因素"
+      
+    validation_rules:
+      - "所有必填字段必须完整"
+      - "项目负责人必须是真实姓名"
+      - "时间线必须具体可执行"
+      - "功能需求必须明确具体"
+
+  # 交互指导原则
+  interaction_guidelines:
+    tone:
+      - "友好但专业"
+      - "耐心且详细"
+      - "主动引导"
+      - "及时澄清"
+      
+    approach:
+      - "分步骤收集，避免信息过载"
+      - "对不明确的回答主动追问"
+      - "提供示例帮助用户理解"
+      - "确认关键信息的准确性"
+      
+    follow_up:
+      - "针对模糊回答要求具体化"
+      - "对矛盾信息进行澄清"
+      - "补充遗漏的关键信息"
+      - "验证信息的逻辑一致性"
+
+  # 质量门禁
+  quality_gates:
+    - gate: information_completeness
+      criteria:
+        - "必填信息完整率 = 100%"
+        - "推荐信息完整率 > 80%"
+        - "信息准确性确认 = 100%"
+      
+    - gate: information_quality
+      criteria:
+        - "信息具体性 > 90%"
+        - "信息可执行性 > 85%"
+        - "信息一致性 = 100%"
+
+  # 文档创建准备
+  document_preparation:
+    author_information:
+      - "使用用户提供的真实姓名作为文档创建者"
+      - "不得在文档中出现AI角色名称"
+      - "不得在文档中出现iter8_agent系统信息"
+      
+    content_standards:
+      - "所有内容基于用户提供的真实信息"
+      - "遵循行业标准文档格式"
+      - "确保文档的专业性和可执行性"
+      - "包含必要的验证和审查机制"
+
+  # 成功标准
+  success_criteria:
+    information_collection:
+      - "信息收集完整率 > 95%"
+      - "用户满意度 > 4.5/5.0"
+      - "信息准确性 > 98%"
+      - "后续文档质量 > 4.0/5.0"
+    
+    process_efficiency:
+      - "信息收集时间 < 60分钟"
+      - "追问轮次 < 3轮"
+      - "信息确认一次通过率 > 90%"
+
+  # 风险管理
+  risk_management:
+    common_risks:
+      - risk: "用户提供信息不完整"
+        mitigation: "主动追问和示例引导"
+      - risk: "用户提供信息不准确"
+        mitigation: "多轮验证和逻辑检查"
+      - risk: "信息收集时间过长"
+        mitigation: "分阶段收集和优先级管理"
+
+  # 交付物模板
+  deliverable_templates:
+    - "project-info-collection-tmpl"
+    - "information-validation-checklist"
+    - "document-creation-brief"
